@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import SectionLayout from '@layouts/SectionLayout.astro';
+
+const musicProjects = await getCollection('projects', ({ data }) =>
+  data.domain === 'music' && !data.draft
+);
+---
+
+<SectionLayout
+  title="Performance"
+  description="Musical theater, piano, and performing arts."
+  sectionId="music"
+>
+  <vp-section-hero
+    title="Performance"
+    description="Musical theater on stage, piano when the mind needs to recharge."
+   
+  ></vp-section-hero>
+
+  <div class="container">
+    <div class="performance-content">
+      <vp-annotation-label text="Stage" show-line></vp-annotation-label>
+      <div class="prose">
+        <p>
+          I've performed in a handful of musical productions over the years —
+          musical theater is one of those rare disciplines where technical execution
+          and emotional storytelling have to coexist, which appeals to the same
+          part of my brain that likes HCI.
+        </p>
+      </div>
+
+      <div class="video-links">
+        <vp-icon-link
+          href="http://www.youtube.com/watch?v=eeJJH89chmk"
+          label="Musical theater performance"
+          type="video"
+         
+        ></vp-icon-link>
+        <vp-icon-link
+          href="http://www.youtube.com/watch?v=3qq5oo7p7ok"
+          label="Piano"
+          type="video"
+         
+        ></vp-icon-link>
+      </div>
+    </div>
+  </div>
+</SectionLayout>
+
+<style>
+  .performance-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 56ch;
+  }
+  .prose p {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  .video-links {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+</style>

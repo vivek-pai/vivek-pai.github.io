@@ -1,0 +1,74 @@
+---
+import { getCollection } from 'astro:content';
+import SectionLayout from '@layouts/SectionLayout.astro';
+
+const allProjects = await getCollection('projects', ({ data }) =>
+  data.domain === 'hci' && !data.draft
+);
+const featured = allProjects.filter((p) => p.data.featured);
+const rest = allProjects.filter((p) => !p.data.featured);
+---
+
+<SectionLayout
+  title="HCI & Work"
+  description="Human-computer interaction research, product design, and engineering."
+  sectionId="hci"
+>
+  <vp-section-hero
+    title="HCI & Work"
+    description="Human-computer interaction research, product design, and engineering — from NASA's ISS to everyday accessibility."
+   
+  ></vp-section-hero>
+
+  <div class="container">
+    {featured.length > 0 && (
+      <section class="project-section">
+        <vp-annotation-label text="Featured" show-line></vp-annotation-label>
+        <vp-project-grid variant="featured">
+          {featured.map((p) => (
+            <vp-project-card
+              title={p.data.title}
+              subtitle={p.data.subtitle ?? ''}
+              caption={p.data.caption}
+              hero-image={p.data.heroImage ?? ''}
+              hero-image-alt={p.data.heroImageAlt}
+              tags={p.data.tags.join(',')}
+              date={p.data.date.toISOString()}
+              featured
+             
+            ></vp-project-card>
+          ))}
+        </vp-project-grid>
+      </section>
+    )}
+
+    {rest.length > 0 && (
+      <section class="project-section">
+        <vp-annotation-label text="More Work" show-line></vp-annotation-label>
+        <vp-project-grid variant="standard">
+          {rest.map((p) => (
+            <vp-project-card
+              title={p.data.title}
+              subtitle={p.data.subtitle ?? ''}
+              caption={p.data.caption}
+              hero-image={p.data.heroImage ?? ''}
+              hero-image-alt={p.data.heroImageAlt}
+              tags={p.data.tags.join(',')}
+              date={p.data.date.toISOString()}
+             
+            ></vp-project-card>
+          ))}
+        </vp-project-grid>
+      </section>
+    )}
+  </div>
+</SectionLayout>
+
+<style>
+  .project-section {
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+</style>

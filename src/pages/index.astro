@@ -1,0 +1,85 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SchematicMap from '@components/svelte/SchematicMap.svelte';
+---
+
+<BaseLayout
+  title="Vivek Pai"
+  description="HCI practitioner, maker, researcher, and aspiring Starfleet captain."
+>
+  <div class="page-shell">
+    <!-- Accessible nav — visually hidden for sighted users, schematic handles them -->
+    <nav class="a11y-nav" aria-label="Primary navigation">
+      <a href="#schematic" class="skip-link">Skip to schematic</a>
+      <ul>
+        <li><a href="/work">HCI &amp; Work</a></li>
+        <li><a href="/research">Research</a></li>
+        <li><a href="/fabrication">Fabrication</a></li>
+        <li><a href="/music">Performance</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </nav>
+
+    <main id="schematic" class="home-main">
+      <SchematicMap client:load />
+    </main>
+
+    <vp-footer></vp-footer>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Visually hidden but fully accessible nav — sighted users navigate via the schematic */
+  .a11y-nav {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .skip-link:focus {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: auto;
+    height: auto;
+    padding: 0.5rem 1rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-accent);
+    clip: auto;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    z-index: 999;
+  }
+
+  .page-shell {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .home-main {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Make Astro's island wrapper transparent to the flex height chain */
+  .home-main :global(astro-island) {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

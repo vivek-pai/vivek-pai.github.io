@@ -1,0 +1,65 @@
+/* Shared schematic / blueprint aesthetic classes */
+
+.schematic-line {
+  stroke: var(--color-line);
+  stroke-width: 0.75;
+  fill: none;
+}
+
+.schematic-line--faint {
+  stroke: var(--color-line-faint);
+  stroke-width: 0.5;
+}
+
+.schematic-line--accent {
+  stroke: var(--color-accent);
+  stroke-width: 1;
+}
+
+/* Dimension tick marks */
+.dimension-tick {
+  stroke: var(--color-line);
+  stroke-width: 0.5;
+  stroke-linecap: square;
+}
+
+/* Annotation text — small, Signika, sepia */
+.annotation {
+  font-family: var(--font-heading);
+  font-size: 0.625rem;
+  fill: var(--color-line);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.annotation--accent {
+  fill: var(--color-accent);
+}
+
+.annotation--coords {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  fill: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Grid / graph paper overlay */
+.schematic-grid {
+  stroke: var(--color-line-dim);
+  stroke-width: 0.3;
+}
+
+/* Hotspot indicator dot */
+.hotspot-dot {
+  fill: var(--color-accent);
+  r: 3;
+  opacity: 0.6;
+}
+
+/* Leader line (callout connector) */
+.leader-line {
+  stroke: var(--color-line);
+  stroke-width: 0.5;
+  stroke-dasharray: 3 2;
+  fill: none;
+}

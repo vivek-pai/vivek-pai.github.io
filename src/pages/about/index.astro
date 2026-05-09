@@ -1,0 +1,213 @@
+---
+import SectionLayout from '@layouts/SectionLayout.astro';
+---
+
+<SectionLayout
+  title="About"
+  description="Vivek Pai — HCI practitioner, maker, researcher, and aspiring Starfleet captain."
+  sectionId="about"
+>
+  <vp-section-hero
+    title="Vivek Pai"
+    description="Starfleet captain in the making. Seeking fun opportunities to enhance human experience."
+   
+  ></vp-section-hero>
+
+  <div class="container about-grid">
+
+    <!-- Left column: skills + links -->
+    <aside class="about-aside">
+      <div class="aside-section">
+        <vp-annotation-label text="Skills" show-line></vp-annotation-label>
+        <div class="skill-chips">
+          {['TypeScript / React', 'C#', 'C++', 'Python', 'Svelte', 'Lit', 'Web', '3D Printing', 'Laser Cutting', 'Gadgetry'].map((s) => (
+            <vp-tag-chip label={s}></vp-tag-chip>
+          ))}
+        </div>
+      </div>
+
+      <div class="aside-section">
+        <vp-annotation-label text="Links" show-line></vp-annotation-label>
+        <div class="link-list">
+          <vp-icon-link href="https://github.com/vivek-pai" label="GitHub" type="github"></vp-icon-link>
+          <vp-icon-link href="https://www.linkedin.com/in/vivekrpai" label="LinkedIn" type="linkedin"></vp-icon-link>
+        </div>
+      </div>
+
+      <!-- The poem -->
+      <div class="aside-section poem">
+        <vp-annotation-label text="Log entry" show-line></vp-annotation-label>
+        <p><em>When I was little</em>, I broke a lot of things.<br/>Radios, remotes, toy cars.<br/>And then I fixed them (mostly).</p>
+        <p><em>Today</em>, I break a lot of things.<br/>Code, builds, 3D prints.<br/>And then I (sorta) fix and improve them.</p>
+        <p><em>Onwards</em>, I still want to break things.<br/>Means, patterns, technical frontiers.<br/>And then I want to rebuild them.</p>
+      </div>
+    </aside>
+
+    <!-- Right column: bio + work history -->
+    <main class="about-main">
+      <div class="prose-section">
+        <vp-annotation-label text="About me" show-line></vp-annotation-label>
+        <div class="prose">
+          <p>
+            I'm originally from the Boston area. My beverage of choice is coffee,
+            though matcha tea does wonders for my complexion. I enjoy musical theater
+            and play the piano when my mind needs to recharge.
+          </p>
+          <p>
+            I graduated from Carnegie Mellon University with a B.S. in Information Systems
+            and Computer Science in 2012, and later received my
+            <a href="http://www.hcii.cmu.edu/">Master of Human-Computer Interaction</a> degree.
+          </p>
+        </div>
+      </div>
+
+      <div class="prose-section">
+        <vp-annotation-label text="Experience" show-line></vp-annotation-label>
+        <div class="experience-list">
+          <div class="exp-item">
+            <span class="exp-role">UI Software Engineer</span>
+            <span class="exp-org">Tableau — Visualization team</span>
+            <p>Worked on Viz features for Tableau Desktop.</p>
+          </div>
+          <div class="exp-item">
+            <span class="exp-role">Teaching Assistant</span>
+            <span class="exp-org">Carnegie Mellon University</span>
+            <p>Information Systems Department — ran lab sessions, held office hours, mentored project teams.</p>
+          </div>
+          <div class="exp-item">
+            <span class="exp-role">Application Developer</span>
+            <span class="exp-org">Intel Corporation — Decision Engineering</span>
+            <p>Decision support system for finance general managers on project portfolio strategy.</p>
+          </div>
+          <div class="exp-item">
+            <span class="exp-role">Software Engineer</span>
+            <span class="exp-org">Lockheed Martin — Global Training & Logistics</span>
+            <p>FITE Simulation System: environment and culture training for marines stationed abroad.</p>
+          </div>
+          <div class="exp-item">
+            <span class="exp-role">Bioinformatics Intern</span>
+            <span class="exp-org">Broad Institute — Rinn Laboratory</span>
+            <p>Lincus system for consolidating genetics data from computational biology experiments.</p>
+          </div>
+          <div class="exp-item">
+            <span class="exp-role">Computational Biology Intern</span>
+            <span class="exp-org">Broad Institute — Cancer Platform</span>
+            <p>"A Novel Computational Method for Finding Regions with Copy Number Abnormalities in Cancer Cells."</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</SectionLayout>
+
+<style>
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .about-grid {
+      grid-template-columns: 240px 1fr;
+    }
+  }
+
+  .about-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .aside-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .skill-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35em;
+  }
+
+  .link-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .poem p {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75em;
+  }
+
+  .poem em {
+    color: var(--color-line);
+  }
+
+  .about-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .prose-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .prose p {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75em;
+  }
+
+  .prose a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .experience-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .exp-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-line-dim);
+  }
+
+  .exp-role {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .exp-org {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    color: var(--color-line);
+    letter-spacing: 0.03em;
+  }
+
+  .exp-item p {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+</style>

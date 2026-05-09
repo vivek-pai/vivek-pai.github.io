@@ -1,0 +1,28 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  sectionId: string;
+}
+
+const { title, description, sectionId } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <vp-nav-bar active-section={sectionId}></vp-nav-bar>
+
+  <main class="section-main">
+    <slot />
+  </main>
+
+  <vp-footer></vp-footer>
+</BaseLayout>
+
+<style>
+  .section-main {
+    min-height: calc(100dvh - var(--size-nav-h) - 4rem);
+    padding-block: 3rem;
+  }
+</style>
