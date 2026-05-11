@@ -1,12 +1,13 @@
 <script lang="ts">
   import type { Hotspot } from '@lib/types';
+  import { navigate } from 'astro:transitions/client';
 
   export let hotspot: Hotspot;
   export let onHover: (id: string | null) => void = () => {};
 
   function handleClick() {
     if (hotspot.active && hotspot.href) {
-      window.location.href = hotspot.href;
+      navigate(hotspot.href);
     }
   }
 

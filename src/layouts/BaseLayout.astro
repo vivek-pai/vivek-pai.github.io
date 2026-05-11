@@ -1,4 +1,6 @@
 ---
+import { ClientRouter } from 'astro:transitions';
+
 interface Props {
   title?: string;
   description?: string;
@@ -45,6 +47,8 @@ const pageTitle = title === 'Vivek Pai' ? title : `${title} — Vivek Pai`;
     <link rel="preload" href="/fonts/pt-serif-400.woff2" as="font" type="font/woff2" crossorigin />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <ClientRouter />
   </head>
   <body>
     <slot />
@@ -55,6 +59,12 @@ const pageTitle = title === 'Vivek Pai' ? title : `${title} — Vivek Pai`;
   @import '../styles/typography.css';
   @import '../styles/global.css';
 </style>
+
+<!-- Nav sound on every page transition -->
+<script>
+  import { playNavSound } from '@lib/sounds';
+  document.addEventListener('astro:before-preparation', () => playNavSound());
+</script>
 
 <!-- Register all Lit web components globally -->
 <script>

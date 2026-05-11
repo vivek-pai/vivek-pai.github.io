@@ -13,6 +13,7 @@ const projects = defineCollection({
     domain: z.enum(['hci', 'research', 'fabrication', 'music', 'about']),
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),
+    videoId: z.string().optional(),
     links: z
       .array(
         z.object({

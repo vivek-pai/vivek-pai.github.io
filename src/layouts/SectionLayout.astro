@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import { pageTransition } from '@lib/transitions';
 
 interface Props {
   title: string;
@@ -8,21 +9,140 @@ interface Props {
 }
 
 const { title, description, sectionId } = Astro.props;
+
+const sections = [
+  { id: 'hci',         href: '/work',        label: 'work'        },
+  { id: 'research',    href: '/research',    label: 'research'    },
+  { id: 'fabrication', href: '/fabrication', label: 'fabrication' },
+  { id: 'music',       href: '/music',       label: 'performance' },
+  { id: 'about',       href: '/about',       label: 'about'       },
+];
 ---
 
 <BaseLayout title={title} description={description}>
-  <vp-nav-bar active-section={sectionId}></vp-nav-bar>
+  <nav class="schematic-nav" aria-label="Site navigation" transition:persist>
+    <a href="/" class="nav-home">
+      VIVEK PAI <span class="nav-id">// VP-01</span>
+    </a>
+    <div class="nav-links">
+      {sections.map((s, i) => (
+        <>
+          {i > 0 && <span class="nav-sep">·</span>}
+          <a
+            href={s.href}
+            class={s.id === sectionId ? 'nav-link nav-link--active' : 'nav-link'}
+            aria-current={s.id === sectionId ? 'page' : undefined}
+          >{s.label}</a>
+        </>
+      ))}
+    </div>
+  </nav>
 
-  <main class="section-main">
+  <main class="section-main" transition:name="page-main" transition:animate={pageTransition}>
     <slot />
   </main>
 
-  <vp-footer></vp-footer>
+  <vp-footer transition:persist></vp-footer>
 </BaseLayout>
 
 <style>
+  .schematic-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 1.5rem;
+    background: rgba(249, 248, 248, 0.92);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-bottom: 1px dashed rgba(139, 115, 85, 0.28);
+  }
+
+  .nav-home {
+    font-family: var(--font-heading);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--transition-fast);
+  }
+
+  .nav-home:hover { color: var(--color-accent); }
+
+  .nav-id {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    color: var(--color-line);
+    font-weight: 400;
+  }
+
+  /* Inline nav — no flex gap needed, spacing via padding + separator chars */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    line-height: 1;
+  }
+
+  .nav-sep {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--color-line-faint);
+    padding-inline: 0.6rem;
+    user-select: none;
+  }
+
+  .nav-link {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: lowercase;
+    color: var(--color-line);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--transition-fast);
+  }
+
+  .nav-link:hover { color: var(--color-accent); }
+
+  .nav-link--active {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  @media (max-width: 620px) {
+    .nav-id {
+      display: none;
+    }
+    .nav-sep {
+      padding-inline: 0.4rem;
+    }
+  }
+
+  @media (max-width: 440px) {
+    .schematic-nav {
+      flex-wrap: wrap;
+      gap: 0.4rem 0;
+      padding: 0.5rem 1rem;
+    }
+    .nav-links {
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+  }
+
+  /* Section page grid — cooler/neutral tone vs schematic's warm sepia */
   .section-main {
-    min-height: calc(100dvh - var(--size-nav-h) - 4rem);
+    min-height: calc(100dvh - 42px - 4rem);
     padding-block: 3rem;
+    /* Exact match to homepage SVG grid: major 90px/0.6px, minor 30px/0.4px */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cpath d='M90 0L0 0 0 90' fill='none' stroke='rgba(139,115,85,0.2)' stroke-width='0.6'/%3E%3Cline x1='30' x2='30' y2='90' stroke='rgba(139,115,85,0.12)' stroke-width='0.4'/%3E%3Cline x1='60' x2='60' y2='90' stroke='rgba(139,115,85,0.12)' stroke-width='0.4'/%3E%3Cline y1='30' x2='90' y2='30' stroke='rgba(139,115,85,0.12)' stroke-width='0.4'/%3E%3Cline y1='60' x2='90' y2='60' stroke='rgba(139,115,85,0.12)' stroke-width='0.4'/%3E%3C/svg%3E");
+    background-size: 90px 90px;
   }
 </style>

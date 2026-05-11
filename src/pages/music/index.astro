@@ -2,69 +2,279 @@
 import { getCollection } from 'astro:content';
 import SectionLayout from '@layouts/SectionLayout.astro';
 
-const musicProjects = await getCollection('projects', ({ data }) =>
+const allPerformances = await getCollection('projects', ({ data }) =>
   data.domain === 'music' && !data.draft
 );
+allPerformances.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
 <SectionLayout
   title="Performance"
-  description="Musical theater, piano, and performing arts."
+  description="Musical theater, piano, and stage performance."
   sectionId="music"
 >
-  <vp-section-hero
-    title="Performance"
-    description="Musical theater on stage, piano when the mind needs to recharge."
-   
-  ></vp-section-hero>
+  <div class="program">
 
-  <div class="container">
-    <div class="performance-content">
-      <vp-annotation-label text="Stage" show-line></vp-annotation-label>
-      <div class="prose">
-        <p>
-          I've performed in a handful of musical productions over the years —
-          musical theater is one of those rare disciplines where technical execution
-          and emotional storytelling have to coexist, which appeals to the same
-          part of my brain that likes HCI.
-        </p>
+    <!-- ── Cover ───────────────────────────────────────── -->
+    <header class="cover">
+      <div class="cover-eyebrow">REC. DECK · PERFORMANCE</div>
+      <div class="cover-locator">
+        <div class="loc-line"></div>
+        <span class="loc-text">⬡ X: 115.3  Y: 071.4  [VP-01 // REC. DECK]</span>
+        <div class="loc-line"></div>
       </div>
+      <h1 class="cover-title">Stage &amp; Keys</h1>
+      <p class="cover-byline">Performances by Vivek Pai</p>
+      <div class="cover-rule"></div>
+    </header>
 
-      <div class="video-links">
-        <vp-icon-link
-          href="http://www.youtube.com/watch?v=eeJJH89chmk"
-          label="Musical theater performance"
-          type="video"
-         
-        ></vp-icon-link>
-        <vp-icon-link
-          href="http://www.youtube.com/watch?v=3qq5oo7p7ok"
-          label="Piano"
-          type="video"
-         
-        ></vp-icon-link>
-      </div>
-    </div>
+    <!-- ── Program entries ─────────────────────────────── -->
+    {allPerformances.map((p, i) => (
+      <article class="entry">
+
+        <div class="entry-header">
+          <span class="entry-n">{String(i + 1).padStart(2, '0')}</span>
+          <div class="entry-title-block">
+            <h2 class="entry-title">{p.data.title}</h2>
+            {p.data.subtitle && (
+              <p class="entry-role">as <em>{p.data.subtitle}</em></p>
+            )}
+          </div>
+        </div>
+
+        <div class="entry-meta">
+          <span class="entry-venue">{p.data.caption}</span>
+          <time class="entry-year" datetime={p.data.date.toISOString()}>
+            {p.data.date.getFullYear()}
+          </time>
+        </div>
+
+        {p.data.videoId && (
+          <a
+            href={`https://www.youtube.com/watch?v=${p.data.videoId}`}
+            class="video-thumb"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Watch ${p.data.title} on YouTube`}
+          >
+            <img
+              src={`https://img.youtube.com/vi/${p.data.videoId}/hqdefault.jpg`}
+              alt={`${p.data.title} performance thumbnail`}
+              loading="lazy"
+              width="480"
+              height="360"
+            />
+            <div class="play-btn" aria-hidden="true">▶</div>
+          </a>
+        )}
+
+        {p.data.tags.length > 0 && (
+          <div class="entry-tags">
+            {p.data.tags.map((t: string) => <span class="tag">{t}</span>)}
+          </div>
+        )}
+
+        {i < allPerformances.length - 1 && (
+          <div class="entry-sep" aria-hidden="true">— ✦ —</div>
+        )}
+
+      </article>
+    ))}
+
   </div>
 </SectionLayout>
 
 <style>
-  .performance-content {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    max-width: 56ch;
+  .program {
+    max-width: 60ch;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    padding-block: 3rem 6rem;
   }
-  .prose p {
+
+  /* ── Cover ──────────────────────────────────────────── */
+
+  .cover {
+    margin-bottom: 4.5rem;
+    text-align: center;
+  }
+
+  .cover-eyebrow {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-line);
+    margin-bottom: 1.25rem;
+  }
+
+  .cover-locator {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+
+  .loc-line {
+    flex: 1;
+    border-top: 1px dashed var(--color-line);
+    opacity: 0.3;
+  }
+
+  .loc-text {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: var(--color-line);
+    opacity: 0.55;
+    white-space: nowrap;
+  }
+
+  .cover-title {
     font-family: var(--font-body);
-    font-size: 0.9rem;
-    line-height: 1.65;
-    color: var(--color-text-muted);
+    font-size: clamp(2.2rem, 6vw, 3.5rem);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.1;
+    color: #1a1a1a;
+    margin: 0 0 0.5rem;
+  }
+
+  .cover-byline {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-line);
+    margin: 0 0 1.5rem;
+  }
+
+  .cover-rule {
+    width: 3rem;
+    height: 2px;
+    background: var(--color-accent);
+    margin-inline: auto;
+  }
+
+  /* ── Program entries ────────────────────────────────── */
+
+  .entry {
+    padding-block: 2.5rem;
+  }
+
+  .entry-header {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+  }
+
+  .entry-n {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--color-line);
+    opacity: 0.5;
+    padding-top: 0.45rem;
+    flex-shrink: 0;
+  }
+
+  .entry-title {
+    font-family: var(--font-body);
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: #1a1a1a;
+    margin: 0 0 0.2rem;
+  }
+
+  .entry-role {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--color-line);
     margin: 0;
   }
-  .video-links {
+
+  .entry-meta {
     display: flex;
-    gap: 1.5rem;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.25rem;
+    padding-left: calc(1.25rem + 2ch);
+  }
+
+  .entry-venue {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-line);
+  }
+
+  .entry-year {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--color-line);
+    opacity: 0.6;
+  }
+
+  .video-thumb {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid var(--color-line-dim);
+    margin-bottom: 1rem;
+    text-decoration: none;
+  }
+
+  .video-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 200ms ease;
+  }
+
+  .video-thumb:hover img { opacity: 0.85; }
+
+  .play-btn {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    pointer-events: none;
+  }
+
+  .entry-tags {
+    display: flex;
     flex-wrap: wrap;
+    gap: 0.4rem;
+    padding-left: calc(1.25rem + 2ch);
+  }
+
+  .tag {
+    font-family: var(--font-heading);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-line);
+    padding: 0.2em 0.55em;
+    border: 1px solid var(--color-line-faint);
+    border-radius: 2px;
+  }
+
+  .entry-sep {
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--color-line-faint);
+    letter-spacing: 0.2em;
+    margin-top: 2.5rem;
   }
 </style>

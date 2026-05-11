@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { hotspots } from '@lib/schematic-hotspots';
   import HotspotRegion from './HotspotRegion.svelte';
+  import { playBootSound } from '@lib/sounds';
 
   let hoveredId: string | null = null;
   let svgEl: SVGSVGElement;
@@ -16,6 +17,7 @@
 
   onMount(async () => {
     mounted = true;
+    playBootSound();
     const anime = (await import('animejs/lib/anime.es.js')).default;
 
     // Phase 1: outer frame lines draw in
@@ -91,7 +93,7 @@
   <!-- Fallback nav for screen readers / mobile -->
   <nav class="schematic-fallback" aria-label="Site sections">
     <ul>
-      {#each hotspots.filter((h) => h.active) as h}
+      {#each hotspots.filter((h) => h.active) as h (h.id)}
         <li><a href={h.href}>{h.label} <span class="fallback-sub">— {h.sublabel}</span></a></li>
       {/each}
     </ul>
@@ -419,7 +421,7 @@
     <!-- Ship designation + name -->
     <text class="annotation-fade" x="30" y="21"
       font-family="Signika, sans-serif" font-size="8" font-weight="600"
-      fill="#8B7355" letter-spacing="0.15em">VIVEK PAI // VRP-01</text>
+      fill="#8B7355" letter-spacing="0.15em">VIVEK PAI // VP-01</text>
     <text class="callout-fade" x="30" y="31"
       font-family="Courier New, monospace" font-size="4.5"
       fill="#8B7355" letter-spacing="0.08em">CLASSIFICATION: PERSONAL  //  MISSION: DISCOVERY + EXPERIENCE</text>
@@ -526,9 +528,18 @@
     }
   }
 
+  /* Decorative layers — must not intercept pointer events from hotspot regions */
+  :global(.detail-fade),
+  :global(.callout-fade),
+  :global(.frame-line),
+  :global(.construction-line) {
+    pointer-events: none;
+  }
+
   /* annotation-fade elements start hidden for JS to animate */
   :global(.annotation-fade) {
     opacity: 0;
+    pointer-events: none;
   }
 
   :global(.coord-readout) {

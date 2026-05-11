@@ -1,12 +1,18 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import SectionLayout from '@layouts/SectionLayout.astro';
 
 const allProjects = await getCollection('projects', ({ data }) =>
   data.domain === 'hci' && !data.draft
 );
-const featured = allProjects.filter((p) => p.data.featured);
-const rest = allProjects.filter((p) => !p.data.featured);
+allProjects.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const projects = await Promise.all(
+  allProjects.map(async (p) => {
+    const { Content } = await render(p);
+    return { data: p.data, slug: p.id, Content };
+  })
+);
 ---
 
 <SectionLayout
@@ -14,61 +20,333 @@ const rest = allProjects.filter((p) => !p.data.featured);
   description="Human-computer interaction research, product design, and engineering."
   sectionId="hci"
 >
-  <vp-section-hero
-    title="HCI & Work"
-    description="Human-computer interaction research, product design, and engineering — from NASA's ISS to everyday accessibility."
-   
-  ></vp-section-hero>
+  <div class="magazine">
 
-  <div class="container">
-    {featured.length > 0 && (
-      <section class="project-section">
-        <vp-annotation-label text="Featured" show-line></vp-annotation-label>
-        <vp-project-grid variant="featured">
-          {featured.map((p) => (
-            <vp-project-card
-              title={p.data.title}
-              subtitle={p.data.subtitle ?? ''}
-              caption={p.data.caption}
-              hero-image={p.data.heroImage ?? ''}
-              hero-image-alt={p.data.heroImageAlt}
-              tags={p.data.tags.join(',')}
-              date={p.data.date.toISOString()}
-              featured
-             
-            ></vp-project-card>
-          ))}
-        </vp-project-grid>
-      </section>
-    )}
+    <!-- ── Cover ─────────────────────────────────────────── -->
+    <header class="cover">
+      <div class="cover-top">
+        <span class="cover-eyebrow">BRIDGE SECTION · HCI &amp; WORK</span>
+        <div class="cover-locator">
+          <div class="loc-line"></div>
+          <span class="loc-text">⬡ X: 072.4  Y: 031.2  [VP-01 // BRIDGE]</span>
+          <div class="loc-line"></div>
+        </div>
+      </div>
+      <div class="cover-title-row">
+        <h1 class="cover-title">Design &amp;<br/>HCI</h1>
+        <p class="cover-deck">
+          Selected projects in human–computer interaction,
+          interaction design, and applied research.
+        </p>
+      </div>
+      <div class="cover-rule"></div>
+    </header>
 
-    {rest.length > 0 && (
-      <section class="project-section">
-        <vp-annotation-label text="More Work" show-line></vp-annotation-label>
-        <vp-project-grid variant="standard">
-          {rest.map((p) => (
-            <vp-project-card
-              title={p.data.title}
-              subtitle={p.data.subtitle ?? ''}
-              caption={p.data.caption}
-              hero-image={p.data.heroImage ?? ''}
-              hero-image-alt={p.data.heroImageAlt}
-              tags={p.data.tags.join(',')}
-              date={p.data.date.toISOString()}
-             
-            ></vp-project-card>
-          ))}
-        </vp-project-grid>
-      </section>
-    )}
+    <!-- ── Spreads ───────────────────────────────────────── -->
+    {projects.map(({ data, Content }, i) => (
+      <article class="spread">
+
+        <!-- Hero -->
+        <div class="spread-hero">
+          {data.heroImage ? (
+            <img src={data.heroImage} alt={data.heroImageAlt} loading="lazy" />
+          ) : (
+            <div class="hero-placeholder">
+              <span class="hero-n">{String(i + 1).padStart(2, '0')}</span>
+            </div>
+          )}
+          <div class="hero-overline">
+            {data.subtitle && <span class="overline-venue">{data.subtitle}</span>}
+            <time class="overline-year" datetime={data.date.toISOString()}>
+              {data.date.getFullYear()}
+            </time>
+          </div>
+        </div>
+
+        <!-- Display title -->
+        <h2 class="spread-title">{data.title}</h2>
+
+        <!-- Lede — the hook -->
+        <p class="spread-lede">{data.caption}</p>
+
+        <div class="spread-rule"></div>
+
+        <!-- Body -->
+        <div class="spread-body">
+          <Content />
+        </div>
+
+        <!-- Footer -->
+        <footer class="spread-footer">
+          {data.tags.length > 0 && (
+            <div class="spread-tags">
+              {data.tags.map((t: string) => <span class="tag">{t}</span>)}
+            </div>
+          )}
+          {data.links && data.links.length > 0 && (
+            <div class="spread-links">
+              {data.links.map((l: { label: string; url: string }) => (
+                <a href={l.url} class="spread-link" target="_blank" rel="noopener noreferrer">
+                  ↗ {l.label}
+                </a>
+              ))}
+            </div>
+          )}
+        </footer>
+
+      </article>
+    ))}
+
   </div>
 </SectionLayout>
 
 <style>
-  .project-section {
-    margin-bottom: 3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
+  .magazine {
+    max-width: min(95vw, 900px);
+    margin-inline: auto;
+    padding-inline: 2rem;
+    padding-block: 3rem 6rem;
   }
+
+  /* ── Cover ──────────────────────────────────────────── */
+
+  .cover {
+    margin-bottom: 5rem;
+  }
+
+  .cover-top {
+    margin-bottom: 2.5rem;
+  }
+
+  .cover-eyebrow {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-line);
+    margin-bottom: 1.25rem;
+  }
+
+  .cover-locator {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .loc-line {
+    flex: 1;
+    border-top: 1px dashed var(--color-line);
+    opacity: 0.3;
+  }
+
+  .loc-text {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: var(--color-line);
+    opacity: 0.55;
+    white-space: nowrap;
+  }
+
+  .cover-title-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+    align-items: end;
+    margin-bottom: 2rem;
+  }
+
+  .cover-title {
+    font-family: var(--font-heading);
+    font-size: clamp(3.5rem, 10vw, 6rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: #1a1a1a;
+    margin: 0;
+  }
+
+  .cover-deck {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-style: italic;
+    line-height: 1.65;
+    color: var(--color-line);
+    margin: 0;
+    padding-bottom: 0.4rem;
+    max-width: 36ch;
+  }
+
+  .cover-rule {
+    height: 3px;
+    background: #1a1a1a;
+  }
+
+  /* ── Spreads ────────────────────────────────────────── */
+
+  .spread {
+    padding-block: 5rem;
+    border-bottom: 1px solid var(--color-line-dim);
+  }
+
+  .spread:last-child {
+    border-bottom: none;
+  }
+
+  /* Hero image */
+  .spread-hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--color-bg-alt);
+    margin-bottom: 2rem;
+  }
+
+  .spread-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem 2rem;
+    box-sizing: border-box;
+  }
+
+  .hero-n {
+    font-family: var(--font-heading);
+    font-size: clamp(6rem, 18vw, 12rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--color-line);
+    opacity: 0.08;
+    user-select: none;
+  }
+
+  /* Overline floats at the bottom of the hero */
+  .hero-overline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    background: rgba(249, 248, 248, 0.88);
+    backdrop-filter: blur(4px);
+    border-top: 1px solid rgba(139, 115, 85, 0.2);
+  }
+
+  .overline-venue {
+    font-family: var(--font-heading);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    padding: 0.1em 0.45em;
+    border: 1px solid var(--color-accent);
+    border-radius: 2px;
+  }
+
+  .overline-year {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--color-line);
+    opacity: 0.65;
+  }
+
+  /* Display title */
+  .spread-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5.5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #1a1a1a;
+    margin: 0 0 1.25rem;
+  }
+
+  /* Lede — large italic hook */
+  .spread-lede {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: clamp(1.15rem, 2.5vw, 1.4rem);
+    line-height: 1.6;
+    color: #3a3a3a;
+    margin: 0 0 2rem;
+    max-width: 62ch;
+  }
+
+  .spread-rule {
+    width: 3rem;
+    height: 2px;
+    background: var(--color-accent);
+    margin-bottom: 2rem;
+  }
+
+  /* Body — slightly inset for visual contrast with lede */
+  .spread-body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #2a2a2a;
+    max-width: 62ch;
+  }
+
+  .spread-body :global(p) { margin: 0 0 1em; }
+  .spread-body :global(p:last-child) { margin-bottom: 0; }
+
+  /* Footer */
+  .spread-footer {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+  }
+
+  .spread-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-line);
+    padding: 0.2em 0.55em;
+    border: 1px solid var(--color-line-faint);
+    border-radius: 2px;
+  }
+
+  .spread-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-left: auto;
+  }
+
+  .spread-link {
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: opacity 120ms ease;
+  }
+
+  .spread-link:hover { opacity: 0.7; }
 </style>

@@ -98,3 +98,14 @@ ul {
   margin-inline: auto;
   padding-inline: 1.5rem;
 }
+
+/* Page transition keyframes — LCARS horizontal scan */
+@keyframes lcars-in {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0); }
+}
+
+@keyframes lcars-out {
+  from { clip-path: inset(0 0% 0 0); }
+  to   { clip-path: inset(0 0% 0 100%); }
+}

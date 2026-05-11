@@ -1,5 +1,8 @@
 ---
 import SectionLayout from '@layouts/SectionLayout.astro';
+
+const today = new Date();
+const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
 ---
 
 <SectionLayout
@@ -7,207 +10,150 @@ import SectionLayout from '@layouts/SectionLayout.astro';
   description="Vivek Pai — HCI practitioner, maker, researcher, and aspiring Starfleet captain."
   sectionId="about"
 >
-  <vp-section-hero
-    title="Vivek Pai"
-    description="Starfleet captain in the making. Seeking fun opportunities to enhance human experience."
-   
-  ></vp-section-hero>
+  <div class="log">
 
-  <div class="container about-grid">
-
-    <!-- Left column: skills + links -->
-    <aside class="about-aside">
-      <div class="aside-section">
-        <vp-annotation-label text="Skills" show-line></vp-annotation-label>
-        <div class="skill-chips">
-          {['TypeScript / React', 'C#', 'C++', 'Python', 'Svelte', 'Lit', 'Web', '3D Printing', 'Laser Cutting', 'Gadgetry'].map((s) => (
-            <vp-tag-chip label={s}></vp-tag-chip>
-          ))}
-        </div>
+    <!-- ── Header ─────────────────────────────────────── -->
+    <header class="log-header">
+      <div class="log-eyebrow">CAPTAIN'S QUARTERS · ABOUT</div>
+      <div class="log-locator">
+        <div class="loc-line"></div>
+        <span class="loc-text">⬡ X: 078.9  Y: 108.6  [VP-01 // CAPTAIN'S QTR]</span>
+        <div class="loc-line"></div>
       </div>
-
-      <div class="aside-section">
-        <vp-annotation-label text="Links" show-line></vp-annotation-label>
-        <div class="link-list">
-          <vp-icon-link href="https://github.com/vivek-pai" label="GitHub" type="github"></vp-icon-link>
-          <vp-icon-link href="https://www.linkedin.com/in/vivekrpai" label="LinkedIn" type="linkedin"></vp-icon-link>
-        </div>
+      <div class="log-entry-line">
+        <span class="log-label">LOG ENTRY</span>
+        <span class="log-date">{logDate}</span>
       </div>
+    </header>
 
-      <!-- The poem -->
-      <div class="aside-section poem">
-        <vp-annotation-label text="Log entry" show-line></vp-annotation-label>
-        <p><em>When I was little</em>, I broke a lot of things.<br/>Radios, remotes, toy cars.<br/>And then I fixed them (mostly).</p>
-        <p><em>Today</em>, I break a lot of things.<br/>Code, builds, 3D prints.<br/>And then I (sorta) fix and improve them.</p>
-        <p><em>Onwards</em>, I still want to break things.<br/>Means, patterns, technical frontiers.<br/>And then I want to rebuild them.</p>
+    <!-- ── Photo ──────────────────────────────────────── -->
+    <div class="photo-wrap">
+      <div class="photo-placeholder" aria-label="Photo placeholder">
+        <span class="photo-label">// PHOTO</span>
       </div>
-    </aside>
+    </div>
 
-    <!-- Right column: bio + work history -->
-    <main class="about-main">
-      <div class="prose-section">
-        <vp-annotation-label text="About me" show-line></vp-annotation-label>
-        <div class="prose">
-          <p>
-            I'm originally from the Boston area. My beverage of choice is coffee,
-            though matcha tea does wonders for my complexion. I enjoy musical theater
-            and play the piano when my mind needs to recharge.
-          </p>
-          <p>
-            I graduated from Carnegie Mellon University with a B.S. in Information Systems
-            and Computer Science in 2012, and later received my
-            <a href="http://www.hcii.cmu.edu/">Master of Human-Computer Interaction</a> degree.
-          </p>
-        </div>
-      </div>
+    <!-- ── Log entries ────────────────────────────────── -->
+    <div class="log-body">
+      <p>
+        Placeholder — first paragraph. A few sentences about who you are,
+        written in first person. Keep it personal, not a resume summary.
+      </p>
+      <p>
+        Placeholder — second paragraph. A bit more context: where you're from,
+        what drives you, what you care about beyond the work.
+      </p>
+    </div>
 
-      <div class="prose-section">
-        <vp-annotation-label text="Experience" show-line></vp-annotation-label>
-        <div class="experience-list">
-          <div class="exp-item">
-            <span class="exp-role">UI Software Engineer</span>
-            <span class="exp-org">Tableau — Visualization team</span>
-            <p>Worked on Viz features for Tableau Desktop.</p>
-          </div>
-          <div class="exp-item">
-            <span class="exp-role">Teaching Assistant</span>
-            <span class="exp-org">Carnegie Mellon University</span>
-            <p>Information Systems Department — ran lab sessions, held office hours, mentored project teams.</p>
-          </div>
-          <div class="exp-item">
-            <span class="exp-role">Application Developer</span>
-            <span class="exp-org">Intel Corporation — Decision Engineering</span>
-            <p>Decision support system for finance general managers on project portfolio strategy.</p>
-          </div>
-          <div class="exp-item">
-            <span class="exp-role">Software Engineer</span>
-            <span class="exp-org">Lockheed Martin — Global Training & Logistics</span>
-            <p>FITE Simulation System: environment and culture training for marines stationed abroad.</p>
-          </div>
-          <div class="exp-item">
-            <span class="exp-role">Bioinformatics Intern</span>
-            <span class="exp-org">Broad Institute — Rinn Laboratory</span>
-            <p>Lincus system for consolidating genetics data from computational biology experiments.</p>
-          </div>
-          <div class="exp-item">
-            <span class="exp-role">Computational Biology Intern</span>
-            <span class="exp-org">Broad Institute — Cancer Platform</span>
-            <p>"A Novel Computational Method for Finding Regions with Copy Number Abnormalities in Cancer Cells."</p>
-          </div>
-        </div>
-      </div>
-    </main>
   </div>
 </SectionLayout>
 
 <style>
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 3rem;
+  .log {
+    max-width: 56ch;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    padding-block: 3rem 6rem;
   }
 
-  @media (min-width: 768px) {
-    .about-grid {
-      grid-template-columns: 240px 1fr;
-    }
+  /* ── Header ─────────────────────────────────────────── */
+
+  .log-header {
+    margin-bottom: 3rem;
   }
 
-  .about-aside {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .aside-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .skill-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35em;
-  }
-
-  .link-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .poem p {
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    line-height: 1.7;
-    color: var(--color-text-muted);
-    margin-bottom: 0.75em;
-  }
-
-  .poem em {
-    color: var(--color-line);
-  }
-
-  .about-main {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-  }
-
-  .prose-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .prose p {
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    line-height: 1.65;
-    color: var(--color-text-muted);
-    margin-bottom: 0.75em;
-  }
-
-  .prose a {
-    color: var(--color-accent);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .experience-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .exp-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2em;
-    padding-left: 1rem;
-    border-left: 2px solid var(--color-line-dim);
-  }
-
-  .exp-role {
+  .log-eyebrow {
     font-family: var(--font-heading);
-    font-size: 0.85rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-line);
+    margin-bottom: 1.25rem;
+  }
+
+  .log-locator {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .loc-line {
+    flex: 1;
+    border-top: 1px dashed var(--color-line);
+    opacity: 0.3;
+  }
+
+  .loc-text {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: var(--color-line);
+    opacity: 0.55;
+    white-space: nowrap;
+  }
+
+  .log-entry-line {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    border-top: 3px solid #1a1a1a;
+    padding-top: 0.75rem;
+  }
+
+  .log-label {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
     font-weight: 600;
-    color: var(--color-text);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1a1a1a;
   }
 
-  .exp-org {
-    font-family: var(--font-heading);
-    font-size: 0.75rem;
+  .log-date {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
     color: var(--color-line);
-    letter-spacing: 0.03em;
   }
 
-  .exp-item p {
+  /* ── Photo ───────────────────────────────────────────── */
+
+  .photo-wrap {
+    margin-bottom: 2.5rem;
+  }
+
+  .photo-placeholder {
+    width: 180px;
+    height: 180px;
+    border: 1px dashed var(--color-line-faint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-alt);
+  }
+
+  .photo-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--color-line-faint);
+  }
+
+  /* ── Log body ─────────────────────────────────────────── */
+
+  .log-body {
     font-family: var(--font-body);
-    font-size: 0.8rem;
-    line-height: 1.55;
-    color: var(--color-text-muted);
-    margin: 0;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #2a2a2a;
+  }
+
+  .log-body p {
+    margin: 0 0 1.25em;
+  }
+
+  .log-body p:last-child {
+    margin-bottom: 0;
   }
 </style>

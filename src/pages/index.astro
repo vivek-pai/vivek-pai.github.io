@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SchematicMap from '@components/svelte/SchematicMap.svelte';
+import { pageTransition } from '@lib/transitions';
 ---
 
 <BaseLayout
@@ -20,7 +21,7 @@ import SchematicMap from '@components/svelte/SchematicMap.svelte';
       </ul>
     </nav>
 
-    <main id="schematic" class="home-main">
+    <main id="schematic" class="home-main" transition:name="page-main" transition:animate={pageTransition}>
       <SchematicMap client:load />
     </main>
 
