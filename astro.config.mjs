@@ -4,7 +4,7 @@ import lit from '@astrojs/lit';
 import mdx from '@astrojs/mdx';
 
 export default defineConfig({
-  site: 'https://vivek-pai.github.io',
+  site: 'https://vivekrpai.com',
   output: 'static',
   integrations: [mdx(), svelte(), lit()],
   image: {
