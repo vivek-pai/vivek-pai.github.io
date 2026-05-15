@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#F9F8F8"/>
-  <!-- Schematic diamond mark -->
-  <path d="M16 4 L28 16 L16 28 L4 16 Z" fill="none" stroke="#8B7355" stroke-width="1.2"/>
-  <path d="M16 8 L24 16 L16 24 L8 16 Z" fill="none" stroke="#da4f2e" stroke-width="0.8"/>
-  <circle cx="16" cy="16" r="2" fill="#da4f2e"/>
-</svg>
