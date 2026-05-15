@@ -14,6 +14,7 @@ const projects = defineCollection({
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),
     videoId: z.string().optional(),
+    noEmbed: z.boolean().optional(),
     links: z
       .array(
         z.object({

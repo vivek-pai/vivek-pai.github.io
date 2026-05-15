@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import SectionLayout from '@layouts/SectionLayout.astro';
 
 const allProjects = await getCollection('projects', ({ data }) =>
@@ -7,12 +7,7 @@ const allProjects = await getCollection('projects', ({ data }) =>
 );
 allProjects.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const projects = await Promise.all(
-  allProjects.map(async (p) => {
-    const { Content } = await render(p);
-    return { data: p.data, slug: p.id, Content };
-  })
-);
+const projects = allProjects.map((p) => ({ data: p.data, slug: p.id }));
 ---
 
 <SectionLayout
@@ -43,24 +38,27 @@ const projects = await Promise.all(
     </header>
 
     <!-- ── Spreads ───────────────────────────────────────── -->
-    {projects.map(({ data, Content }, i) => (
-      <article class="spread">
+    {projects.map(({ data, slug }, i) => (
+      <a href={`/projects/${slug}`} class="spread">
 
         <!-- Hero -->
-        <div class="spread-hero">
-          {data.heroImage ? (
-            <img src={data.heroImage} alt={data.heroImageAlt} loading="lazy" />
-          ) : (
-            <div class="hero-placeholder">
-              <span class="hero-n">{String(i + 1).padStart(2, '0')}</span>
+        <div class="spread-hero-wrap">
+          <div class="spread-hero">
+            {data.heroImage ? (
+              <img src={data.heroImage} alt={data.heroImageAlt} loading="lazy" />
+            ) : (
+              <div class="hero-placeholder">
+                <span class="hero-n">{String(i + 1).padStart(2, '0')}</span>
+              </div>
+            )}
+            <div class="hero-overline">
+              {data.subtitle && <span class="overline-venue">{data.subtitle}</span>}
+              <time class="overline-year" datetime={data.date.toISOString()}>
+                {data.date.getFullYear()}
+              </time>
             </div>
-          )}
-          <div class="hero-overline">
-            {data.subtitle && <span class="overline-venue">{data.subtitle}</span>}
-            <time class="overline-year" datetime={data.date.toISOString()}>
-              {data.date.getFullYear()}
-            </time>
           </div>
+          <div class="hero-reticle" aria-hidden="true"></div>
         </div>
 
         <!-- Display title -->
@@ -71,30 +69,14 @@ const projects = await Promise.all(
 
         <div class="spread-rule"></div>
 
-        <!-- Body -->
-        <div class="spread-body">
-          <Content />
-        </div>
-
         <!-- Footer -->
-        <footer class="spread-footer">
-          {data.tags.length > 0 && (
-            <div class="spread-tags">
-              {data.tags.map((t: string) => <span class="tag">{t}</span>)}
-            </div>
-          )}
-          {data.links && data.links.length > 0 && (
-            <div class="spread-links">
-              {data.links.map((l: { label: string; url: string }) => (
-                <a href={l.url} class="spread-link" target="_blank" rel="noopener noreferrer">
-                  ↗ {l.label}
-                </a>
-              ))}
-            </div>
-          )}
-        </footer>
+        {data.tags.length > 0 && (
+          <div class="spread-tags">
+            {data.tags.map((t: string) => <span class="tag">{t}</span>)}
+          </div>
+        )}
 
-      </article>
+      </a>
     ))}
 
   </div>
@@ -186,22 +168,37 @@ const projects = await Promise.all(
   /* ── Spreads ────────────────────────────────────────── */
 
   .spread {
+    display: block;
     padding-block: 5rem;
     border-bottom: 1px solid var(--color-line-dim);
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 120ms ease;
   }
 
   .spread:last-child {
     border-bottom: none;
   }
 
+  .spread:hover .spread-rule { width: 5rem; }
+  .spread:hover .hero-reticle { opacity: 1; }
+
+  .spread-rule {
+    transition: width 200ms ease;
+  }
+
   /* Hero image */
+  .spread-hero-wrap {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
   .spread-hero {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
     overflow: hidden;
     background: var(--color-bg-alt);
-    margin-bottom: 2rem;
   }
 
   .spread-hero img {
@@ -209,6 +206,29 @@ const projects = await Promise.all(
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: filter 220ms ease;
+  }
+
+  .spread:hover .spread-hero img {
+    filter: brightness(0.82);
+  }
+
+  .hero-reticle {
+    position: absolute;
+    inset: -8px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 200ms ease;
+    z-index: 2;
+    background:
+      linear-gradient(to right,  var(--color-accent) 22px, transparent 22px) top    left  / 22px 2px no-repeat,
+      linear-gradient(to bottom, var(--color-accent) 22px, transparent 22px) top    left  / 2px 22px no-repeat,
+      linear-gradient(to left,   var(--color-accent) 22px, transparent 22px) top    right / 22px 2px no-repeat,
+      linear-gradient(to bottom, var(--color-accent) 22px, transparent 22px) top    right / 2px 22px no-repeat,
+      linear-gradient(to right,  var(--color-accent) 22px, transparent 22px) bottom left  / 22px 2px no-repeat,
+      linear-gradient(to top,    var(--color-accent) 22px, transparent 22px) bottom left  / 2px 22px no-repeat,
+      linear-gradient(to left,   var(--color-accent) 22px, transparent 22px) bottom right / 22px 2px no-repeat,
+      linear-gradient(to top,    var(--color-accent) 22px, transparent 22px) bottom right / 2px 22px no-repeat;
   }
 
   .hero-placeholder {
@@ -294,28 +314,8 @@ const projects = await Promise.all(
     margin-bottom: 2rem;
   }
 
-  /* Body — slightly inset for visual contrast with lede */
-  .spread-body {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    line-height: 1.8;
-    color: #2a2a2a;
-    max-width: 62ch;
-  }
-
-  .spread-body :global(p) { margin: 0 0 1em; }
-  .spread-body :global(p:last-child) { margin-bottom: 0; }
-
-  /* Footer */
-  .spread-footer {
-    margin-top: 2.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1rem 2rem;
-  }
-
   .spread-tags {
+    margin-top: 2rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
@@ -331,22 +331,4 @@ const projects = await Promise.all(
     border: 1px solid var(--color-line-faint);
     border-radius: 2px;
   }
-
-  .spread-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-left: auto;
-  }
-
-  .spread-link {
-    font-family: var(--font-heading);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    color: var(--color-accent);
-    text-decoration: none;
-    transition: opacity 120ms ease;
-  }
-
-  .spread-link:hover { opacity: 0.7; }
 </style>

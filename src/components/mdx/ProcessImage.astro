@@ -1,0 +1,35 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+const { src, alt, caption } = Astro.props;
+---
+
+<figure class="process-image">
+  <img src={src} alt={alt} loading="lazy" />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .process-image {
+    margin: 2rem 0;
+  }
+
+  .process-image img {
+    width: 100%;
+    display: block;
+    border: 1px solid var(--color-line-faint);
+  }
+
+  .process-image figcaption {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    color: var(--color-line);
+    opacity: 0.7;
+    margin-top: 0.5rem;
+    line-height: 1.5;
+  }
+</style>

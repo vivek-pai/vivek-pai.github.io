@@ -1,11 +1,43 @@
 ---
 title: StampMouse
-subtitle: Ergonomic 3D Printed Mouse
-caption: An ergonomic mouse for low-precision clicking, designed for accessibility.
-heroImageAlt: The StampMouse ergonomic 3D printed mouse
-tags: [Fabrication, Accessibility]
-date: 2014-12-10
+subtitle: Applied Fabrication · CMU
+caption: An ergonomic mouse for low-precision clicking — the entire case is the button.
+heroImage: /projects/stamp-mouse/main.jpg
+heroImageAlt: StampMouse assembled — a dome-shaped 3D printed mouse casing with no visible buttons
+tags: [Fabrication, Accessibility, 3D Printing, Interaction Design]
+date: 2014-12-01
 domain: fabrication
+featured: false
 ---
 
-A 3D-printed mouse designed for users with limited fine-motor control. By rethinking the form factor to favor a palmar grip and reducing the precision required for clicking, StampMouse makes computing more accessible for users who struggle with traditional pointer devices.
+import ProcessImage from '@components/mdx/ProcessImage.astro';
+import ProcessGrid from '@components/mdx/ProcessGrid.astro';
+
+### The Problem
+
+Commercial ergonomic mice reduce wrist strain — but they still require precise finger placement to click. For users with conditions like tendinitis, arthritis, or other injuries affecting fine motor control, even pressing a small button can be painful or unreliable.
+
+StampMouse eliminates the precision requirement entirely: **the entire top surface of the mouse is the button**. Press anywhere downward — like using a stamp — to click. The action requires no finger precision, only a palmar downward motion.
+
+### Design
+
+The interaction model was settled early: stamp-press anywhere on the case to click, normal optical sensor for movement. The form factor followed from that — a dome that fits naturally under the palm, with the click mechanism attached to the base rather than the top surface.
+
+<ProcessImage src="/projects/stamp-mouse/sketches.jpg" alt="Whiteboard sketches showing different mouse form factor concepts and the stamp-click mechanism" caption="Early design session. We worked out how the case, the internal circuit board, and the stamp mechanism would fit together before touching any modeling software." />
+
+### 3D Modeling & Printing
+
+Dimensions were based on a disassembled optical mouse circuit board — we extracted the PCB and designed the housing around it.
+
+<ProcessGrid>
+  <ProcessImage src="/projects/stamp-mouse/top_model.png" alt="123D Design 3D model of the StampMouse outer case showing dome form factor" caption="Mouse case modeled in 123D Design. The case snaps down onto the base, triggering the click mechanism at the bottom." />
+  <ProcessImage src="/projects/stamp-mouse/all_parts.jpg" alt="All 3D printed components laid out alongside the extracted circuit board" caption="Printed components and the salvaged circuit board before assembly." />
+</ProcessGrid>
+
+Components were printed on a Makerbot and assembled. Initial dimensions were off — some trimming and coordination between components was needed before parts fit properly.
+
+<ProcessImage src="/projects/stamp-mouse/tweaking.jpg" alt="Team member trimming and filing 3D printed parts to get them to fit together correctly" caption="Post-print fitting. 3D printing tolerances required hand-trimming before parts aligned. The final prototype also revealed the mouse was slightly oversized for smaller hands, and click sensitivity moved the cursor — both candidates for a next iteration." />
+
+### Role
+
+Project manager and 3D modeler. Responsible for the outer case geometry in 123D Design, coordinating component sizing across the team, and user testing.

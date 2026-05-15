@@ -1,11 +1,66 @@
 ---
 title: Pandora
-subtitle: Memories Digitizer
-caption: A box to store physical memories into a digital form.
-heroImageAlt: The Pandora memory digitizer box
-tags: [IoT, Fabrication, HCI]
-date: 2015-04-28
+subtitle: Applied Gadgets · Intel Edison
+caption: Storing physical memories into a digital form.
+heroImage: /projects/pandora/main.jpg
+heroImageAlt: Pandora box fully assembled and stained — a compact wooden box with a webcam lens and wooden peg buttons
+tags: [IoT, Fabrication, OpenCV, Node.js]
+date: 2015-04-01
 domain: fabrication
+featured: true
+videoId: VOeaJgSeo5w
 ---
 
-A custom-built IoT device that bridges the physical and digital — placing a physical object (a ticket stub, a photograph, a note) into the box captures it and creates a linked digital memory with optional annotation. Built with laser-cut acrylic, a Raspberry Pi, and custom software.
+import ProcessImage from '@components/mdx/ProcessImage.astro';
+import ProcessGrid from '@components/mdx/ProcessGrid.astro';
+
+### Concept
+
+Inspired by the *Revenge* TV show's [Infinity Box](http://revengeabc.wikia.com/wiki/Infinity_Box) — a physical repository of memories — Pandora is a collector's box that digitizes the faces from photographs placed inside it. Slip in an old photo; the box extracts every face and uploads it to the cloud where it's accessible from any device.
+
+The goal was a finished, polished object: not a breadboard in a shoebox, but something that looked like it belonged on a shelf.
+
+### Electronics First
+
+The two hardest technical pieces went first: getting live snapshots from the webcam, and sending extracted faces over WiFi to a cloud service.
+
+<ProcessImage src="/projects/pandora/webcam_testing.jpg" alt="Laptop screen showing live webcam feed being transmitted to a Node.js web service" caption="First milestone — streaming live video over WiFi to a Node.js web service running locally. Once this worked, I added OpenCV face detection to send only extracted faces." />
+
+With that working, I installed OpenCV on the Intel Edison, implemented face detection and cropping, and wired up the full pipeline: photo in → face detected → cropped face uploaded to Azure-hosted Node.js service → accessible from any browser.
+
+<ProcessImage src="/projects/pandora/breadboard.jpg" alt="Intel Edison connected to a breadboard with buttons and LEDs wired up" caption="Edison on breadboard. I needed a trigger button (camera shutter), a reset button, a progress LED for OpenCV computation and WiFi transfer, and an RGB LED indicating good vs. bad memory state." />
+
+<ProcessImage src="/projects/pandora/interaction.jpg" alt="Hand-drawn sketch of the box interaction: photo goes in, face comes out to the cloud" caption="Interaction sketch. The entire surface interaction is just: open box, place photo, press button." />
+
+### Building the Box
+
+I used InkScape to design laser-cut plywood sides with **box joints** — interlocking tabs that snap together without glue, relying entirely on friction. The cut files went straight to a laser cutter.
+
+<ProcessGrid>
+  <ProcessImage src="/projects/pandora/laser_cutting.jpg" alt="Laser-cut plywood panels laid out showing the box joint tab patterns" caption="Laser-cut panels. The tab-and-slot geometry was drawn in InkScape and cut from plywood." />
+  <ProcessImage src="/projects/pandora/box_side.jpg" alt="Single assembled box side showing the reset button hole and LED aperture" caption="One wall assembled. The button hole and LED aperture are cut into the panel — the joints hold it all without glue." />
+</ProcessGrid>
+
+<ProcessGrid>
+  <ProcessImage src="/projects/pandora/box_back.jpg" alt="Back of assembled unfinished box showing port cutouts" caption="Back panel with port cutouts for USB and power. Labels laser-etched directly into the wood." />
+  <ProcessImage src="/projects/pandora/secrets.jpg" alt="Back of stained box showing port labels showing through stain" caption="After staining — the laser-etched labels show through the stain cleanly." />
+</ProcessGrid>
+
+### Finishing
+
+A water-based wood stain over the whole box. Wooden peg buttons were turned and fitted into the button holes.
+
+<ProcessGrid>
+  <ProcessImage src="/projects/pandora/edison_in_box.jpg" alt="Inside of stained box before Edison installation" caption="Interior after staining, before the Edison was fitted." />
+  <ProcessImage src="/projects/pandora/buttons.jpg" alt="Side of box with wooden peg button and green LED installed" caption="Stained side panel with wooden peg trigger and green progress LED." />
+</ProcessGrid>
+
+<ProcessImage src="/projects/pandora/stained_box_open.jpg" alt="Open box interior showing collected mementos and photographs including Hugh Jackman" caption="Interior dressed as the Infinity Box — old photographs and mementos stored alongside newly captured faces." />
+
+### Stack
+
+- **Intel Edison** — main compute, runs OpenCV face detection
+- **OpenCV** — face detection and extraction
+- **Node.js / Azure** — cloud service receiving, storing, and serving face images
+- **InkScape + laser cutter** — box panels and joints
+- **Makerbot** — wooden peg buttons

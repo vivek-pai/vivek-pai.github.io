@@ -1,18 +1,69 @@
 ---
 title: Adapting a System to Emotional State
-subtitle: Honors Thesis — Carnegie Mellon University
-caption: Improving task performance in an affect-mediated computing system.
-heroImageAlt: Affect sensing research setup
-tags: [Research, HCI]
-date: 2012-05-01
+subtitle: CMU Honors Thesis · FLAIRS 2014
+caption: Can a computing system that detects and responds to a user's emotional state measurably improve their task performance?
+heroImage: /projects/senior-thesis/thesis_screenshot2.jpg
+heroImageAlt: BasketGame — food items falling from the top, the player catching them with colored baskets
+tags: [Affect Computing, ML, HCI, Research, IRB Study]
+date: 2012-04-01
 domain: research
 featured: true
 links:
-  - label: FLAIRS-27 Paper
-    url: https://aaai.org/ocs/index.php/FLAIRS/FLAIRS14/paper/view/7829
+  - label: FLAIRS 2014 Publication
+    url: https://aaai.org/papers/flairs-2014-7839/
+    type: paper
+  - label: Full Thesis (KiltHub)
+    url: https://kilthub.cmu.edu/articles/thesis/Improving_Task_Performance_in_an_Affect-mediated_Computing_System/6686099?file=12211904
     type: paper
 ---
 
-Senior honors thesis exploring whether a computing system that detects and responds to a user's emotional state can measurably improve task performance. The system used physiological signals and facial expression analysis to detect affect, then adapted interface parameters accordingly.
+import ProcessImage from '@components/mdx/ProcessImage.astro';
+import ProcessGrid from '@components/mdx/ProcessGrid.astro';
 
-The work was later published at the 27th International Florida Artificial Intelligence Research Society (FLAIRS) Conference.
+### The Question
+
+Can a computing system that reads a user's emotional state and adapts its behavior in real time actually help that user perform better? This senior honors thesis investigated that question by building the system and running an IRB-approved study with children.
+
+The domain: **affect-mediated computing** — systems that change their behavior based on detected emotional state. The mechanism: facial expression recognition. The test bed: a children's game with five escalating difficulty phases.
+
+### Facial Expression Recognition Engine
+
+I built a recognition engine on top of Jason Saragih's FaceTracker, which could localize and track a face in a video frame. On top of that, I trained a **support vector machine (SVM)** using the Cohn-Kanade+ emotion-labeled face dataset to classify Paul Ekman's seven fundamental emotions from the tracked facial geometry.
+
+<ProcessImage src="/projects/senior-thesis/surprise_facemesh.jpg" alt="Face mesh overlay on a participant expressing surprise — points tracked across forehead, eyes, nose, and mouth" caption="The Modified FaceTracker outputting a facial mesh. The SVM classifier reads geometry changes across these points to identify emotional state." />
+
+<ProcessImage src="/projects/senior-thesis/thesis_highlevel.jpg" alt="System architecture diagram: FaceTracker feeds into SVM classifier, which signals BasketGame to adjust difficulty" caption="System overview. The FER engine runs continuously alongside the game, signaling the game controller to hold or advance a phase based on detected emotion." />
+
+### BasketGame
+
+The game — **BasketGame** — was designed specifically as a controllable test environment. Colored food items fall from the top of the screen; the player catches them with matching baskets. Five phases of increasing difficulty require the player to manage more variety, faster fall speeds, and less predictable positions.
+
+The key mechanic: if the FER engine detected frustration or anger, the game would hold the current phase rather than advancing — keeping the player in a range of challenge they could manage, rather than pushing them to overwhelm.
+
+<ProcessGrid>
+  <ProcessImage src="/projects/senior-thesis/proto_design.png" alt="Left: early prototype with basic shapes. Right: final version with illustrated food items and sound effects." caption="Left: first prototype testing core mechanics. Right: final build with illustrated assets and sound." />
+  <ProcessImage src="/projects/senior-thesis/thesis_screenshot2.jpg" alt="BasketGame screenshot showing food items falling and colored baskets at the bottom" caption="BasketGame in play. Five phases of increasing difficulty — the affect engine decides whether to hold or advance each phase." />
+</ProcessGrid>
+
+<ProcessImage src="/projects/senior-thesis/EngineDiffTimeline.jpg" alt="Timeline diagram comparing the control and affective engine difficulty curves across a session" caption="The two engine modes. The control engine advances difficulty on a fixed schedule; the affective engine holds phases when negative emotion is detected." />
+
+### Experiment
+
+Participants were four and five-year-old children from CMU's Children's School. Paired experimental-control sessions: one group played with the affective engine enabled, the other with a fixed-difficulty control engine.
+
+**Results across three measures:**
+
+<ProcessGrid>
+  <ProcessImage src="/projects/senior-thesis/ct_improvement.png" alt="Bar chart: affect condition shows higher catch/total ratio than control" caption="Catch/total ratio — affect condition participants caught a higher proportion of items overall." />
+  <ProcessImage src="/projects/senior-thesis/mean_struggle_level.png" alt="Bar chart: affect condition shows fewer mean struggles than control" caption="Struggle count — affect condition participants experienced fewer consecutive miss sequences." />
+</ProcessGrid>
+
+<ProcessImage src="/projects/senior-thesis/struggle_spread_condition.png" alt="Scatter plot showing struggles more evenly distributed across the session in the affect condition" caption="Struggle distribution — struggles in the affect condition were spread more evenly across the session, suggesting sustained engagement rather than concentrated difficulty spikes." />
+
+The results pointed toward a state psychologist Mihaly Csikszentmihalyi calls **flow** — the condition of being optimally challenged, neither bored nor overwhelmed. The affect-mediated engine appeared to nudge participants toward it.
+
+<ProcessImage src="/projects/senior-thesis/flow.png" alt="Csikszentmihalyi's flow diagram showing flow channel between anxiety and boredom axes" caption="Csikszentmihalyi's flow model. The thesis concludes that the affective engine may be capable of inducing and sustaining flow in its users." />
+
+### Role
+
+Solo researcher, system developer, and experimenter. Designed the study, built the FER engine and BasketGame from scratch, recruited and ran all participants under IRB approval. Published at FLAIRS 2014.

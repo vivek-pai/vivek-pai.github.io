@@ -1,0 +1,326 @@
+---
+import { getCollection, render } from 'astro:content';
+import SectionLayout from '@layouts/SectionLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => !data.draft);
+  return projects.map((p) => ({ params: { slug: p.id }, props: { entry: p } }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+
+const domainToSection: Record<string, { id: string; href: string; label: string }> = {
+  hci:         { id: 'hci',         href: '/work',        label: 'HCI & Work'   },
+  research:    { id: 'research',    href: '/research',    label: 'Research'     },
+  fabrication: { id: 'fabrication', href: '/fabrication', label: 'Fabrication'  },
+  music:       { id: 'music',       href: '/music',       label: 'Performance'  },
+  about:       { id: 'about',       href: '/about',       label: 'About'        },
+};
+
+const section = domainToSection[data.domain] ?? domainToSection.hci;
+---
+
+<SectionLayout
+  title={data.title}
+  description={data.caption}
+  sectionId={section.id}
+>
+  <article class="project">
+
+    <!-- Back breadcrumb -->
+    <div class="project-back">
+      <a href={section.href} class="back-link">← {section.label}</a>
+    </div>
+
+    <!-- Hero -->
+    <div class="project-hero">
+      {data.heroImage ? (
+        <img src={data.heroImage} alt={data.heroImageAlt} loading="eager" />
+      ) : (
+        <div class="hero-placeholder">
+          <span class="hero-n">{data.title.slice(0, 2).toUpperCase()}</span>
+        </div>
+      )}
+      <div class="hero-overline">
+        {data.subtitle && <span class="overline-venue">{data.subtitle}</span>}
+        <time class="overline-year" datetime={data.date.toISOString()}>
+          {data.date.getFullYear()}
+        </time>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="project-header">
+      <h1 class="project-title">{data.title}</h1>
+      <p class="project-lede">{data.caption}</p>
+      <div class="project-rule"></div>
+    </header>
+
+    <!-- Body -->
+    <div class="project-body">
+      <Content />
+    </div>
+
+    <!-- Video (if present) -->
+    {data.videoId && (
+      <div class="project-video">
+        <iframe
+          src={`https://www.youtube.com/embed/${data.videoId}`}
+          title={`${data.title} — video`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </div>
+    )}
+
+    <!-- Footer -->
+    <footer class="project-footer">
+      {data.tags.length > 0 && (
+        <div class="project-tags">
+          {data.tags.map((t: string) => <span class="tag">{t}</span>)}
+        </div>
+      )}
+      {data.links && data.links.length > 0 && (
+        <div class="project-links">
+          {data.links.map((l: { label: string; url: string }) => (
+            <a href={l.url} class="project-link" target="_blank" rel="noopener noreferrer">
+              ↗ {l.label}
+            </a>
+          ))}
+        </div>
+      )}
+    </footer>
+
+  </article>
+</SectionLayout>
+
+<style>
+  .project {
+    max-width: min(95vw, 900px);
+    margin-inline: auto;
+    padding-inline: 2rem;
+    padding-block: 2rem 6rem;
+  }
+
+  /* Back link */
+  .project-back {
+    margin-bottom: 2rem;
+  }
+
+  .back-link {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-line);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .back-link:hover { color: var(--color-accent); }
+
+  /* Hero */
+  .project-hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--color-bg-alt);
+    margin-bottom: 2rem;
+  }
+
+  .project-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem 2rem;
+    box-sizing: border-box;
+  }
+
+  .hero-n {
+    font-family: var(--font-heading);
+    font-size: clamp(4rem, 12vw, 8rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--color-line);
+    opacity: 0.12;
+    user-select: none;
+  }
+
+  .hero-overline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    background: rgba(249, 248, 248, 0.88);
+    backdrop-filter: blur(4px);
+    border-top: 1px solid rgba(139, 115, 85, 0.2);
+  }
+
+  .overline-venue {
+    font-family: var(--font-heading);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    padding: 0.1em 0.45em;
+    border: 1px solid var(--color-accent);
+    border-radius: 2px;
+  }
+
+  .overline-year {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--color-line);
+    opacity: 0.65;
+  }
+
+  /* Header */
+  .project-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .project-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #1a1a1a;
+    margin: 0 0 1rem;
+  }
+
+  .project-lede {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.2vw, 1.3rem);
+    line-height: 1.6;
+    color: #3a3a3a;
+    margin: 0 0 1.75rem;
+    max-width: 62ch;
+  }
+
+  .project-rule {
+    width: 3rem;
+    height: 2px;
+    background: var(--color-accent);
+  }
+
+  /* Body */
+  .project-body {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #2a2a2a;
+  }
+
+  .project-body :global(p),
+  .project-body :global(ul),
+  .project-body :global(h3) {
+    max-width: 62ch;
+  }
+
+  .project-body :global(p) { margin: 0 0 1em; }
+  .project-body :global(p:last-child) { margin-bottom: 0; }
+
+  .project-body :global(h3) {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin: 2.5rem 0 0.9rem;
+  }
+
+  .project-body :global(ul) {
+    margin: 0 0 1em 1.2em;
+    padding: 0;
+  }
+
+  .project-body :global(li) { margin-bottom: 0.35em; }
+
+  .project-body :global(strong) {
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  /* Video embed */
+  .project-video {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-top: 2.5rem;
+  }
+
+  .project-video iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  /* Footer */
+  .project-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-line-faint);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-line);
+    padding: 0.2em 0.55em;
+    border: 1px solid var(--color-line-faint);
+    border-radius: 2px;
+  }
+
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-left: auto;
+  }
+
+  .project-link {
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: opacity 120ms ease;
+  }
+
+  .project-link:hover { opacity: 0.7; }
+</style>

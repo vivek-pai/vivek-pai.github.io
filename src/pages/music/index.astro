@@ -6,6 +6,9 @@ const allPerformances = await getCollection('projects', ({ data }) =>
   data.domain === 'music' && !data.draft
 );
 allPerformances.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const featured = allPerformances.filter((p) => p.data.featured);
+const secondary = allPerformances.filter((p) => !p.data.featured);
 ---
 
 <SectionLayout
@@ -28,10 +31,9 @@ allPerformances.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
       <div class="cover-rule"></div>
     </header>
 
-    <!-- ── Program entries ─────────────────────────────── -->
-    {allPerformances.map((p, i) => (
+    <!-- ── Featured entries ────────────────────────────── -->
+    {featured.map((p, i) => (
       <article class="entry">
-
         <div class="entry-header">
           <span class="entry-n">{String(i + 1).padStart(2, '0')}</span>
           <div class="entry-title-block">
@@ -41,45 +43,73 @@ allPerformances.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
             )}
           </div>
         </div>
-
         <div class="entry-meta">
           <span class="entry-venue">{p.data.caption}</span>
           <time class="entry-year" datetime={p.data.date.toISOString()}>
             {p.data.date.getFullYear()}
           </time>
         </div>
-
         {p.data.videoId && (
-          <a
-            href={`https://www.youtube.com/watch?v=${p.data.videoId}`}
-            class="video-thumb"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Watch ${p.data.title} on YouTube`}
-          >
-            <img
-              src={`https://img.youtube.com/vi/${p.data.videoId}/hqdefault.jpg`}
-              alt={`${p.data.title} performance thumbnail`}
-              loading="lazy"
-              width="480"
-              height="360"
-            />
-            <div class="play-btn" aria-hidden="true">▶</div>
-          </a>
+          <div class="video-wrap">
+            {p.data.noEmbed ? (
+              <a href={`https://www.youtube.com/watch?v=${p.data.videoId}`} class="video-thumb" target="_blank" rel="noopener noreferrer" aria-label={`Watch ${p.data.title} on YouTube`}>
+                <img src={`https://img.youtube.com/vi/${p.data.videoId}/hqdefault.jpg`} alt={`${p.data.title} thumbnail`} loading="lazy" width="480" height="360" />
+                <div class="play-btn" aria-hidden="true">▶</div>
+              </a>
+            ) : (
+              <div class="video-embed">
+                <iframe
+                  src={`https://www.youtube.com/embed/${p.data.videoId}`}
+                  title={p.data.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"
+                ></iframe>
+              </div>
+            )}
+            <a href={`https://www.youtube.com/watch?v=${p.data.videoId}`} class="yt-link" target="_blank" rel="noopener noreferrer">↗ Watch on YouTube</a>
+          </div>
         )}
-
         {p.data.tags.length > 0 && (
           <div class="entry-tags">
             {p.data.tags.map((t: string) => <span class="tag">{t}</span>)}
           </div>
         )}
-
-        {i < allPerformances.length - 1 && (
-          <div class="entry-sep" aria-hidden="true">— ✦ —</div>
-        )}
-
+        <!-- Cover link last — sits above passive content; video-wrap is z-index:2 so iframe stays interactive -->
+        <a href={`/projects/${p.id}`} class="entry-cover" aria-label={`View ${p.data.title}`}></a>
       </article>
     ))}
+
+    <!-- ── Earlier Work separator ─────────────────────── -->
+    {secondary.length > 0 && (
+      <div class="section-sep">
+        <div class="sep-line"></div>
+        <span class="sep-label">Earlier Work</span>
+        <div class="sep-line"></div>
+      </div>
+    )}
+
+    <!-- ── Secondary entries ──────────────────────────── -->
+    <div class="secondary-list">
+      {secondary.map((p) => (
+        <article class="secondary-entry">
+          <div class="secondary-meta">
+            <h3 class="secondary-title">{p.data.title}</h3>
+            <time class="secondary-year" datetime={p.data.date.toISOString()}>
+              {p.data.date.getFullYear()}
+            </time>
+          </div>
+          <p class="secondary-caption">{p.data.caption}</p>
+          {p.data.videoId && (
+            <a href={`https://www.youtube.com/watch?v=${p.data.videoId}`} class="yt-link secondary-yt" target="_blank" rel="noopener noreferrer">↗ Watch on YouTube</a>
+          )}
+          <!-- Cover link last — goes to YouTube since video is the content -->
+          {p.data.videoId && (
+            <a href={`https://www.youtube.com/watch?v=${p.data.videoId}`} class="entry-cover" target="_blank" rel="noopener noreferrer" aria-label={`Watch ${p.data.title} on YouTube`}></a>
+          )}
+        </article>
+      ))}
+    </div>
 
   </div>
 </SectionLayout>
@@ -160,7 +190,50 @@ allPerformances.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
   /* ── Program entries ────────────────────────────────── */
 
   .entry {
+    position: relative;
     padding-block: 2.5rem;
+    padding-inline: 0.75rem;
+    cursor: pointer;
+    transition: background 180ms ease, box-shadow 180ms ease;
+  }
+
+  .entry:hover {
+    background: rgba(218, 79, 46, 0.06);
+    box-shadow: inset 0 3px 0 var(--color-accent);
+  }
+
+  .entry:hover .entry-n {
+    color: var(--color-accent);
+    opacity: 1;
+  }
+
+  .entry:hover .entry-title {
+    color: var(--color-accent);
+  }
+
+  /* Stretch cover link — last child sits above passive content */
+  .entry-cover {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /* Video and YouTube link sit above the cover link */
+  .video-wrap {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 1rem;
+  }
+
+  /* yt-link inside video-wrap inherits z-index:2, but needs to be above cover when outside */
+  .entry-tags {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding-left: calc(1.25rem + 2ch);
+    margin-top: 1rem;
   }
 
   .entry-header {
@@ -177,15 +250,18 @@ allPerformances.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
     opacity: 0.5;
     padding-top: 0.45rem;
     flex-shrink: 0;
+    transition: color 180ms ease, opacity 180ms ease;
   }
 
   .entry-title {
     font-family: var(--font-body);
     font-size: clamp(1.4rem, 3.5vw, 2rem);
     font-weight: 700;
+    font-style: italic;
     line-height: 1.15;
     color: #1a1a1a;
     margin: 0 0 0.2rem;
+    transition: color 180ms ease;
   }
 
   .entry-role {
@@ -218,6 +294,26 @@ allPerformances.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
     opacity: 0.6;
   }
 
+  /* ── Video embed ────────────────────────────────────── */
+
+  .video-embed {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid var(--color-line-dim);
+    margin-bottom: 0.5rem;
+  }
+
+  .video-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
   .video-thumb {
     display: block;
     position: relative;
@@ -225,7 +321,7 @@ allPerformances.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
     aspect-ratio: 16 / 9;
     overflow: hidden;
     border: 1px solid var(--color-line-dim);
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     text-decoration: none;
   }
 
@@ -251,12 +347,18 @@ allPerformances.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
     pointer-events: none;
   }
 
-  .entry-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    padding-left: calc(1.25rem + 2ch);
+  .yt-link {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: opacity 120ms ease;
   }
+
+  .yt-link:hover { opacity: 0.65; }
+
+  /* ── Tags ───────────────────────────────────────────── */
 
   .tag {
     font-family: var(--font-heading);
@@ -269,12 +371,98 @@ allPerformances.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
     border-radius: 2px;
   }
 
-  .entry-sep {
-    text-align: center;
+  /* ── Section separator ──────────────────────────────── */
+
+  .section-sep {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-block: 2rem 1rem;
+  }
+
+  .sep-line {
+    flex: 1;
+    border-top: 1px dashed var(--color-line);
+    opacity: 0.25;
+  }
+
+  .sep-label {
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-line);
+    opacity: 0.5;
+    white-space: nowrap;
+  }
+
+  /* ── Secondary (earlier work) list ──────────────────── */
+
+  .secondary-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .secondary-entry {
+    position: relative;
+    padding-block: 1.25rem;
+    padding-inline: 0.75rem;
+    border-bottom: 1px solid var(--color-line-faint);
+    cursor: pointer;
+    transition: background 180ms ease, box-shadow 180ms ease;
+  }
+
+  .secondary-entry:last-child {
+    border-bottom: none;
+  }
+
+  .secondary-entry:hover {
+    background: rgba(218, 79, 46, 0.04);
+    box-shadow: inset 0 2px 0 rgba(218, 79, 46, 0.5);
+  }
+
+  .secondary-entry:hover .secondary-title {
+    color: var(--color-accent);
+  }
+
+  .secondary-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .secondary-title {
     font-family: var(--font-body);
-    font-size: 0.8rem;
-    color: var(--color-line-faint);
-    letter-spacing: 0.2em;
-    margin-top: 2.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    font-style: italic;
+    color: #4a4a4a;
+    margin: 0;
+    transition: color 180ms ease;
+  }
+
+  .secondary-year {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--color-line);
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  .secondary-caption {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--color-line);
+    margin: 0 0 0.5rem;
+    line-height: 1.5;
+  }
+
+  .secondary-yt {
+    position: relative;
+    z-index: 2;
+    font-size: 0.6rem;
+    opacity: 0.65;
   }
 </style>

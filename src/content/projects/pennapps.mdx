@@ -1,0 +1,56 @@
+---
+title: Mago
+subtitle: PennApps 2015 · Best Hardware Hack
+caption: A unique system that allows users to interact with the digital world without a digital interface.
+heroImage: /projects/pennapps/mago.jpg
+heroImageAlt: Mago system on a table — thermal printer, PixyCam, and colored paper cards
+tags: [Hackathon, Hardware, IoT, HCI]
+date: 2015-01-01
+domain: hci
+featured: false
+links:
+  - label: ChallengePost
+    url: http://challengepost.com/software/mago
+    type: demo
+  - label: GitHub
+    url: https://github.com/MasterPie/Gwanny
+    type: github
+---
+
+import ProcessImage from '@components/mdx/ProcessImage.astro';
+import ProcessGrid from '@components/mdx/ProcessGrid.astro';
+
+### The Problem
+
+Modern technology is still a challenge for elderly users and people with disabilities that interfere with their ability to use digital interfaces. Touchscreens, apps, and notifications require a level of digital fluency that not everyone has — and that gap only widens as services move further online.
+
+At PennApps 2015 Winter, we had a thermal printer and a question: what if paper could be both the input *and* the output?
+
+### Mago
+
+Mago is a system that lets users interact with digital services entirely through **colored paper cards**. You hold a card in front of a camera; the system identifies it by color, calls the appropriate API, and prints the result on a thermal receipt.
+
+<ProcessImage src="/projects/pennapps/three.jpg" alt="Mago system showing colored paper cards, PixyCam, and thermal printer on a table" caption="The full Mago system. Each colored card triggers a different action — weather, news, contacts, reminders, emergency SMS, or pizza delivery." />
+
+Cards could fetch the current weather, pull local news and events, surface a contact, send an emergency SMS, poke a friend, or order food — all without touching a screen. Paper in, paper out.
+
+### Build
+
+We divided the work across four areas: CMU PixyCam integration, Intel Edison hardware coordination, thermal printer output, and the API/service backend (my responsibility). Each component had its own constraints.
+
+<ProcessGrid>
+  <ProcessImage src="/projects/pennapps/testing.jpg" alt="Team member testing thermal printer output — printed text on receipt paper" caption="Testing print fidelity on the AdaFruit thermal printer connected to the Intel Edison." />
+  <ProcessImage src="/projects/pennapps/demoing.jpg" alt="Demo table set up for judges with PixyCam, printer, and paper app cards on display" caption="Judge demo setup. The PixyCam scans incoming colored cards; the Edison routes the request through the backend; the printer delivers the result." />
+</ProcessGrid>
+
+Given the 24-hour timeframe, we simplified from object detection to color-based card recognition, and from rich print layouts to linear thermal output. The core interaction held up.
+
+<ProcessImage src="/projects/pennapps/team.jpg" alt="Team photo: Tofi, Shawn, Vivek, and Rosina standing together after the competition" caption="Team Mago. Left to right: Tofi Buzali, Shawn Xu, Vivek Pai, Rosina Rodriguez." />
+
+### Outcome
+
+Mago won **Best Hardware Hack** at PennApps 2015 Winter.
+
+### Role
+
+Web service infrastructure and pitch delivery. Built the API backend layer connecting the Edison to external services (Weather Underground, Postmates, Yo, and others).

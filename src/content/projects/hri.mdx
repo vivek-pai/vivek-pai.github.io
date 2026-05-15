@@ -1,12 +1,60 @@
 ---
 title: Helping a Robot Janitor
-subtitle: Human-Robot Experiment
+subtitle: Human-Robot Interaction · Carnegie Mellon
 caption: Does a user's perception of a service robot's level of autonomy encourage them to help it when it fails?
-heroImageAlt: Robot janitor in an office hallway
-tags: [Research, HCI]
-date: 2015-04-28
+heroImage: /projects/hri/main.jpg
+heroImageAlt: Janitobot fully assembled and operational in a CMU hallway, iPad mounted at neck
+tags: [HRI, Research, Experiment, Interaction Design]
+date: 2015-05-01
 domain: hci
 featured: true
+videoId: eXUfPgCVSwc
 ---
 
-A research study examining whether people's mental model of a robot's autonomy affects their willingness to intervene when it encounters an obstacle. Participants interacted with a simulated robot janitor in varying conditions, revealing insights about trust, perceived agency, and human-robot social dynamics.
+import ProcessImage from '@components/mdx/ProcessImage.astro';
+import ProcessGrid from '@components/mdx/ProcessGrid.astro';
+
+### The Question
+
+What kind of conditions promote helping a robot in need — and how does a robot's *perceived* level of autonomy change that behavior? Do people have the capacity to feel empathy toward a machine whose only purpose is to serve them?
+
+These were the questions driving our Human-Robot Interaction final project at Carnegie Mellon. We designed a full experiment around **Janitobot**: a custodial robot whose job was to clean spills on the CMU campus floor.
+
+### Literature Review
+
+We grounded the experiment in prior research on **trust, empathy, and perceived reliability** in robotics. The central tension: humans are more willing to help other humans than machines, but robots that appear to have limited agency might trigger a different social response.
+
+<ProcessImage src="/projects/hri/papers.jpg" alt="Whiteboard session with research papers and sticky notes exploring themes of trust and autonomy" caption="Literature synthesis session — mapping the relationship between perceived autonomy, trust, and helping behavior." />
+
+### Robot & Interaction Design
+
+We settled on a custodial robot to ground the experiment in a believable, everyday scenario. Janitobot's job was to vacuum up a spill (M&Ms and Skittles) in its target area. It would fail mid-task and make a verbal appeal for help to whoever passed by.
+
+<ProcessImage src="/projects/hri/robot.jpg" alt="CAD render of Janitobot showing vacuum hose arm connected to a chest basket, with a tablet at the neck" caption="CAD render by Yooyoung Ko. The vacuum hose connects to a chest basket; the iPad at the neck displays either a human operator, his office, or the words 'I am an autonomous robot.'" />
+
+We used **Burke's Dramatic Pentad** — a framework from rhetoric — to design the full staged interaction: who the robot was, what it was doing, where it was doing it, how it behaved, and why. This kept the encounter feeling real rather than theatrical.
+
+<ProcessImage src="/projects/hri/pentagram.jpg" alt="Burke's Dramatic Pentad diagram applied to the robot interaction staging" caption="Burke's Dramatic Pentad applied to the Janitobot encounter — ensuring the scene read as a credible, real-world event." />
+
+### Experiment: Three Conditions
+
+We ran an uncontrolled field experiment in a low-traffic area of campus, varying Janitobot's **perceived level of autonomy** across three conditions:
+
+- **Operator Present** — Robot's human controller was clearly visible nearby
+- **Semi-Autonomous** — Controller perceived to be absent, robot appeared to act semi-independently
+- **Fully Autonomous** — Robot appeared to act entirely on its own
+
+The robot made the same verbal appeal in all three conditions. We observed whether passers-by stopped and helped.
+
+<ProcessGrid>
+  <ProcessImage src="/projects/hri/introducing.jpg" alt="Final assembled Janitobot in hallway with iPad neck display showing operator" caption="Janitobot fully operational. The vacuum hose feeds into a wastebin to maintain the illusion of a functioning cleaning system." />
+  <ProcessImage src="/projects/hri/helping.jpg" alt="Participants crouching to help the robot pick up spilled M&Ms" caption="Participants helping in the Operator Present condition. Both the operator-present and semi-autonomous conditions generated substantial helping behavior." />
+</ProcessGrid>
+
+### Findings
+
+Participants were significantly more likely to help when the robot appeared to have a human operator involved — suggesting that perceived human accountability, not robot autonomy alone, drives helping behavior. The fully autonomous condition generated the least help.
+
+### Role
+
+Interaction designer and experimenter. Responsible for the staged interaction design, experiment protocol, and field observation.

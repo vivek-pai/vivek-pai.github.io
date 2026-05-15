@@ -1,0 +1,19 @@
+---
+---
+
+<div class="process-grid">
+  <slot />
+</div>
+
+<style>
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .process-grid :global(.process-image) {
+    margin: 0;
+  }
+</style>

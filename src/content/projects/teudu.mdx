@@ -1,0 +1,47 @@
+---
+title: Teudu
+subtitle: Kinect-Driven Event Board · CMU IS Capstone
+caption: An interactive public event board with an invisible touch screen powered by the Kinect.
+heroImage: /projects/teudu/heroimage.PNG
+heroImageAlt: User interacting with Teudu's gesture-based event display in a campus hallway
+tags: [NUI, Kinect, Interaction Design, Capstone]
+date: 2012-05-01
+domain: hci
+featured: false
+videoId: nj70tTkVIXM
+---
+
+import ProcessImage from '@components/mdx/ProcessImage.astro';
+import ProcessGrid from '@components/mdx/ProcessGrid.astro';
+
+### The Problem
+
+CMU has no shortage of events — but students had no good way to discover them. Flyers get taken down, email lists get ignored, and organizations had no shared platform. Our Junior/Senior Information Systems capstone aimed to fix that with **Teudu**: a public digital event board that anyone could browse by waving their hand.
+
+### Prototype: Rails + Mouse Cursor
+
+We started simple — a Ruby on Rails web application displaying event listings, controlled by a Kinect that emulated a mouse cursor. We deployed it in the student center and watched people try to use it.
+
+<ProcessGrid>
+  <ProcessImage src="/projects/teudu/Teudu373Ror.jpg" alt="Early Ruby on Rails prototype of Teudu showing event listings on a display screen" caption="First prototype — RoR web app controlled by Kinect mouse. Students liked the concept but couldn't reliably interact with the cursor." />
+  <ProcessImage src="/projects/teudu/Teudu373RorView.jpg" alt="Event detail drill-down view in the Rails prototype" caption="Event browse vs. detail drill-down. We learned early to keep the browsing view sparse — only posters — and reserve details for a selected event." />
+</ProcessGrid>
+
+Users enjoyed the idea but couldn't accurately control the cursor. The interaction model needed to change.
+
+### Final System: Natural Gesture Interface
+
+We rebuilt the frontend as a dedicated **Kinect WPF application** — no mouse cursor, just gesture detection and a purpose-built UI. The design language drew from Microsoft's Metro principles: fast in, find it, fast out.
+
+<ProcessGrid>
+  <ProcessImage src="/projects/teudu/TeuduCeilidh.jpg" alt="Teudu Metro-style tile layout showing event cards on a large display" caption="Metro-inspired tile layout. 'Get in, find what you need, get out' — minimal chrome, maximum clarity." />
+  <ProcessImage src="/projects/teudu/TeuduCeilidh2.jpg" alt="Teudu event tile with a live countdown badge showing time until event" caption="Live tiles: if an event starts within the hour, a countdown badge appears on its tile automatically." />
+</ProcessGrid>
+
+One major iteration driver was **mutual awareness** — the system needed to signal when it could see the user and what gesture it was interpreting. Without that feedback, users felt like they were waving into a void.
+
+<ProcessImage src="/projects/teudu/final_screen.jpg" alt="Final Teudu screen with gesture feedback indicators showing the system recognizing the user's hand position" caption="The final interface with mutual-awareness cues. The system shows when it detects the user and which action it's reading — critical for natural-feeling gesture control." />
+
+### Role
+
+Project manager and Kinect application developer. Responsible for the WPF gesture interface implementation and iterative user testing throughout the build.

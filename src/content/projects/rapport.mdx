@@ -1,0 +1,45 @@
+---
+title: Real-time Detection of Rapport
+subtitle: "CMU ArticuLab · Advisor: Alexandros Papangelis"
+caption: Understanding the social signals that indicate friendship — and training a machine to read them from video.
+heroImage: /projects/rapport/ada-and-grace.jpg
+heroImageAlt: Ada and Grace, the ArticuLab's virtual peer tutoring agents
+tags: [ML, Rapport, HCI, Research, NLP]
+date: 2014-12-01
+domain: research
+featured: false
+---
+
+import ProcessImage from '@components/mdx/ProcessImage.astro';
+
+### Context
+
+The [ArticuLab](http://www.articulab.justinecassell.com/projects/rapport.html) at Carnegie Mellon studies how two people in a dyadic setting create, maintain, and break rapport. The end goal: a virtual peer tutor that can build genuine rapport with a student — knowing when to push, when to ease off, and when the relationship has warmed enough to try something harder.
+
+My contribution was a specific subproblem: **can a classifier detect whether two people are friends** from video of them peer tutoring together? Friendship is a strong prior indicator of rapport, and detecting it automatically would let the tutoring agent calibrate its social strategy from the start of a session.
+
+### Literature Review
+
+I began with a survey of existing research in rapport, nonverbal behavior, and social signal processing. The key nonverbal features that distinguished pairs with established rapport: **smiling frequency, head nods, head shakes, and eye gaze patterns**.
+
+<ProcessImage src="/projects/rapport/research_papers.jpg" alt="Stack of printed research papers with handwritten annotations about rapport indicators" caption="Literature survey — mapping the nonverbal features most consistently linked to rapport and friendship in peer interaction research." />
+
+I also consulted a project member specializing in verbal behavior to identify conversational strategies — specific phrasings and patterns in transcripts that signal intimacy, disclosure, and alignment.
+
+### Feature Extraction
+
+I developed a toolkit to extract features from three sources:
+
+- **Video**: using my Modified FaceTracker from the senior thesis to extract smile frequency, head position, and head movement for each participant
+- **Transcripts**: NLP-based extraction of rapport-related conversational strategies (self-disclosure, topic reciprocation, hedging)
+- **Manual annotations**: frame-level behavioral tags from the ArticuLab annotation protocol
+
+The FaceTracker gave me continuous emotional state estimates and head kinematics across each tutoring session — the same engine I had built and validated in my thesis work.
+
+### Classifier
+
+I trained an **SVM classifier** on 28 extracted features, iterating on the feature set until detection accuracy was high on held-out sessions. The final model could determine whether two participants were friends from a tutoring video with strong accuracy — providing the rapport agent with a useful social prior before a session's first exchange.
+
+### Role
+
+Sole researcher and developer on the detection component. Supervised by Alexandros Papangelis. Built the feature extraction pipeline, adapted the FaceTracker for multi-person dyadic video, and trained and evaluated the final classifier.

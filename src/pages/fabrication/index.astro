@@ -39,7 +39,10 @@ const recordCount = String(allProjects.length).padStart(2, '0');
         <article class="dir-card">
 
           <div class="card-tab">
-            <span class="card-index">[{String(i + 1).padStart(2, '0')}]</span>
+            <span class="card-index">
+              <span class="card-caret" aria-hidden="true">&gt; </span>
+              [{String(i + 1).padStart(2, '0')}]
+            </span>
             <time class="card-year" datetime={p.data.date.toISOString()}>
               {p.data.date.getFullYear()}
             </time>
@@ -64,6 +67,8 @@ const recordCount = String(allProjects.length).padStart(2, '0');
           <div class="card-tags">
             {p.data.tags.map((t: string) => <span class="card-tag">{t}</span>)}
           </div>
+
+          <a href={`/projects/${p.id}`} class="card-cover" aria-label={`View ${p.data.title}`}></a>
 
         </article>
       ))}
@@ -174,10 +179,50 @@ const recordCount = String(allProjects.length).padStart(2, '0');
   /* ── Card ───────────────────────────────────────────── */
 
   .dir-card {
+    position: relative;
     border: 1px solid rgba(139, 115, 85, 0.4);
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    cursor: pointer;
+    transition: border-color 180ms ease;
+  }
+
+  .dir-card:hover {
+    border-color: var(--color-accent);
+  }
+
+  /* Cover link — last in DOM, sits above passive content */
+  .card-cover {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /* Color overlay + scan lines — removed on hover to reveal the image */
+  .card-image {
+    position: relative;
+  }
+
+  .card-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.07) 2px,
+        rgba(0, 0, 0, 0.07) 3px
+      ),
+      rgba(218, 79, 46, 0.45);
+    transition: opacity 280ms ease;
+    pointer-events: none;
+  }
+
+  .dir-card:hover .card-image::after {
+    opacity: 0;
   }
 
   .card-tab {
@@ -188,6 +233,21 @@ const recordCount = String(allProjects.length).padStart(2, '0');
     background: rgba(139, 115, 85, 0.1);
     border-bottom: 1px solid rgba(139, 115, 85, 0.28);
     flex-shrink: 0;
+    transition: background 180ms ease, border-color 180ms ease;
+  }
+
+  .dir-card:hover .card-tab {
+    background: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+  }
+
+  .card-caret {
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+
+  .dir-card:hover .card-caret {
+    opacity: 1;
   }
 
   .card-index {
@@ -196,6 +256,11 @@ const recordCount = String(allProjects.length).padStart(2, '0');
     letter-spacing: 0.12em;
     color: var(--color-accent);
     font-weight: 600;
+    transition: color 180ms ease;
+  }
+
+  .dir-card:hover .card-index {
+    color: #F9F8F8;
   }
 
   .card-year {
@@ -204,6 +269,12 @@ const recordCount = String(allProjects.length).padStart(2, '0');
     letter-spacing: 0.1em;
     color: var(--color-line);
     opacity: 0.65;
+    transition: color 180ms ease, opacity 180ms ease;
+  }
+
+  .dir-card:hover .card-year {
+    color: rgba(249, 248, 248, 0.75);
+    opacity: 1;
   }
 
   .card-image {

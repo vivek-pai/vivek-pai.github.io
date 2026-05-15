@@ -1,18 +1,76 @@
 ---
 title: Parallax AR System
-subtitle: MHCI Capstone with NASA
+subtitle: MHCI Capstone · NASA Johnson Space Center
 caption: Assisting astronauts aboard the International Space Station execute procedures.
-heroImageAlt: Parallax AR system in use on the ISS
-tags: [Research, IoT, HCI]
+heroImage: /projects/parallax/parallax.jpg
+heroImageAlt: Parallax AR helmet prototype displaying procedure guidance overlay
+tags: [AR, HCI, Research, IoT, Capstone]
 date: 2015-08-01
 domain: hci
 featured: true
 links:
-  - label: NASA Technical Report
-    url: https://www.nasa.gov
+  - label: Spring Research Booklet
+    url: https://www.vivekrpai.com/Content/Works/Media/Parallax/NASA_Research.pdf
+    type: paper
+  - label: Summer Prototyping Booklet
+    url: https://www.vivekrpai.com/Content/Works/Media/Parallax/NASA_Design.pdf
     type: paper
 ---
 
-Developed as the capstone project for Carnegie Mellon's Master of Human-Computer Interaction program in partnership with NASA's Johnson Space Center, Parallax is an augmented reality system designed to help astronauts execute complex maintenance procedures aboard the International Space Station.
+import ProcessImage from '@components/mdx/ProcessImage.astro';
+import ProcessGrid from '@components/mdx/ProcessGrid.astro';
 
-Working in microgravity with bulky gloves, poor lighting, and no internet connection creates unique challenges for procedure-following. Parallax overlays step-by-step guidance directly onto the physical environment, reducing cognitive load and error rates in high-stakes situations.
+### The Problem Space
+
+Astronauts aboard the ISS regularly perform high-stakes maintenance, experimentation, and repair operations — often as **novice users** following dense paper procedures, in microgravity, with bulky gloves and no internet connection. A single misread step can cascade into hours of lost time or equipment failure.
+
+Our team at Carnegie Mellon (Team Parallax) was assigned the NASA capstone: understand how procedure execution breaks down in constrained environments, then design a forward-facing system to improve it.
+
+### Research: Going to the Work
+
+Rather than interviewing astronauts directly, we embedded ourselves in analogous high-stakes procedural environments where we could actually observe work in progress.
+
+<ProcessGrid>
+  <ProcessImage src="/projects/parallax/firefighter.jpg" alt="Two team members navigating a smoke maze during firefighter training at a fire station" caption="Experiential learning at a fire station — navigating a smoke maze with full gear to feel procedural breakdown firsthand." />
+  <ProcessImage src="/projects/parallax/hoh_sequence.jpg" alt="Sequence model diagram from Habitat for Humanity contextual research" caption="Sequence model from our Habitat for Humanity site visit, capturing how volunteers execute construction procedures with incomplete knowledge." />
+</ProcessGrid>
+
+We conducted contextual inquiry across **biotech manufacturing**, **construction** (Habitat for Humanity), **scuba diving**, and a neurosurgery interview. Each setting exposed a different failure mode: misread steps, tool-finding interruptions, loss of place during distractions.
+
+<ProcessImage src="/projects/parallax/neuro_flow.jpg" alt="Flow model diagram mapping interactions between a neurosurgeon and the entities in their operating environment" caption="Flow model from our neurosurgery interview — mapping all the entities a surgeon must track while performing a procedure." />
+
+### Synthesis: 1,000+ Notes
+
+We synthesized our field research into an affinity diagram — over a thousand individual observations grouped by theme. The clusters pointed directly at the design opportunity: **astronauts need a system that tracks their place in a procedure and directs them to required tools**, without adding cognitive load.
+
+<ProcessImage src="/projects/parallax/affinity.jpg" alt="Large affinity diagram with hundreds of color-coded sticky notes arranged on a wall" caption="Affinity diagram synthesis. Over 1,000 field notes organized into themes that shaped our design direction." />
+
+From the affinity work, we generated 150+ candidate design features and mapped them across an **impact/feasibility matrix** — focusing our prototype scope on what could be built in months and deliver the most mission value.
+
+<ProcessImage src="/projects/parallax/impact_feasibility.jpg" alt="Impact vs feasibility scatter plot matrix with design features plotted across four quadrants" caption="Impact/feasibility matrix — the upper-right quadrant defined our prototype scope." />
+
+### Prototyping: Low to High Fidelity
+
+Early prototypes tested the core interaction concepts with everyday participants before any hardware was involved.
+
+<ProcessGrid>
+  <ProcessImage src="/projects/parallax/lofi1.jpg" alt="Low-fidelity prototype test: participant follows recipe instructions on a projected screen while an arrow points to ingredients" caption="Lo-fi AR test — participants followed recipes using screen-projected instructions and a directional arrow. Validated the core guidance metaphor." />
+  <ProcessImage src="/projects/parallax/lofi2.jpg" alt="Low-fidelity prototype with audio instructions and wristband display" caption="Wristband form-factor prototype testing audio instructions + small display. Audio proved too interruption-heavy for complex tasks." />
+</ProcessGrid>
+
+### The Final System
+
+The medium-fidelity prototype combined off-the-shelf hardware into a functional wearable AR guidance system:
+
+- **Teleprompter glass** mounted in a helmet for heads-up procedure display
+- **iPhone** as the AR display source
+- **Windows Phone** for voice command recognition
+- **Bluetooth Beacons** on tools for proximity detection and navigation
+- **Raspberry Pi + iPad mini** running the frontend procedure application (AngularJS)
+- **Intel Edison** as the Python backend server, orchestrating all components
+
+The system tracked a user's current procedure step, displayed it in the AR overlay, and guided them toward the next required tool via proximity sensing — all hands-free and voice-controlled.
+
+### Role
+
+Project Manager and lead software developer. Responsible for the system architecture connecting the Edison backend, the AngularJS frontend, the Windows Phone speech recognition module, and the Bluetooth beacon proximity layer.

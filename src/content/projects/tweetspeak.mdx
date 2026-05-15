@@ -1,0 +1,37 @@
+---
+title: TweetSpeak
+subtitle: "Speech Recognition Research · Advisor: Yulia Tsvetkov"
+caption: Using tweets to improve an automatic speech recognizer.
+heroImage: /projects/tweetspeak/main.png
+heroImageAlt: TweetSpeak system overview diagram
+tags: [NLP, Speech Recognition, ML, Research]
+date: 2014-12-01
+domain: research
+featured: false
+---
+
+import ProcessImage from '@components/mdx/ProcessImage.astro';
+
+### The Problem
+
+Automatic speech recognizers (ASRs) convert spoken language to text by mapping audio to phonetic pronunciations and then to words. Those pronunciations are typically determined by linguistic experts — but real conversational speech often diverges from the expert-defined canonical forms.
+
+Twitter offered an unusual window into this gap. Given a 140-character limit, users shorten words creatively while preserving enough phonetic structure that the original word remains recognizable. That constraint, it turns out, encodes informal pronunciation.
+
+<ProcessImage src="/projects/tweetspeak/asr.png" alt="Diagram of an automatic speech recognition pipeline showing audio input, acoustic model, pronunciation dictionary, and language model" caption="Standard ASR pipeline. The pronunciation dictionary — the component we targeted — maps words to their phonetic sequences." />
+
+### Approach
+
+We used **Brown clustering** on raw tweet data to group words that were contextually interchangeable — words that appear in similar positions across sentences cluster together regardless of spelling variation. This gave us sets of related forms: standard spellings alongside abbreviated, phonetically-spelled, and contracted variants.
+
+<ProcessImage src="/projects/tweetspeak/clustering.png" alt="Brown clustering output showing groups of related word variants extracted from tweet data" caption="Brown cluster output. Clusters surface informal variants alongside their standard forms — the phonetic relationship between them is what we extracted." />
+
+From these clusters, each team member developed an independent algorithm for inferring pronunciation. My approach: given a cluster of word variants with known pronunciations, find the **longest common subsequence of phonemes** across the expert-defined pronunciations in the cluster. That subsequence represents the sounds consistently preserved across informal variants — likely the phonetically load-bearing portion of the word.
+
+### Results
+
+The final pronunciation variants did not produce measurable improvement in ASR accuracy on the test corpus. However, the methods for extracting pronunciation structure from informal text were the substantive contribution — a starting point for further work on data-driven pronunciation modeling from social media.
+
+### Role
+
+Researcher. Responsible for KALDI toolkit setup and training, and the algorithm for pronunciation extraction via longest common phoneme subsequence.

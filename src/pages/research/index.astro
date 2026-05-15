@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import SectionLayout from '@layouts/SectionLayout.astro';
 
 const allProjects = await getCollection('projects', ({ data }) =>
@@ -7,16 +7,13 @@ const allProjects = await getCollection('projects', ({ data }) =>
 );
 allProjects.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const works = await Promise.all(
-  allProjects.map(async (p) => {
-    const { Content } = await render(p);
-    return { data: p.data, slug: p.id, Content };
-  })
-);
+const featured = allProjects
+  .filter((p) => p.data.featured)
+  .map((p) => ({ data: p.data, slug: p.id }));
 
-const yearRange = works.length
-  ? `${works[works.length - 1].data.date.getFullYear()}–${works[0].data.date.getFullYear()}`
-  : '';
+const secondary = allProjects
+  .filter((p) => !p.data.featured)
+  .map((p) => ({ data: p.data, slug: p.id }));
 ---
 
 <SectionLayout
@@ -30,7 +27,6 @@ const yearRange = works.length
     <header class="masthead">
       <div class="masthead-top">
         <span class="masthead-section">SCIENCE BAY · RESEARCH</span>
-        <span class="masthead-range">{yearRange}</span>
       </div>
       <div class="masthead-locator">
         <div class="loc-line"></div>
@@ -42,9 +38,13 @@ const yearRange = works.length
       <div class="masthead-rule"></div>
     </header>
 
-    <!-- ── Works ──────────────────────────────────────────── -->
-    {works.map(({ data, Content }) => (
+    <!-- ── Publications ───────────────────────────────────── -->
+    {featured.map(({ data, slug }) => (
       <article class="work">
+
+        <div class="work-reticle" aria-hidden="true"></div>
+
+        <div class="pub-badge">↗ Published Paper</div>
 
         <div class="work-meta-row">
           {data.subtitle && <span class="work-venue">{data.subtitle}</span>}
@@ -55,14 +55,7 @@ const yearRange = works.length
 
         <h2 class="work-title">{data.title}</h2>
 
-        <!-- Accessible pullquote — the "so what" for non-academics -->
         <p class="work-pullquote">{data.caption}</p>
-
-        <div class="work-divider"></div>
-
-        <div class="work-body">
-          <Content />
-        </div>
 
         <footer class="work-footer">
           {data.tags.length > 0 && (
@@ -81,8 +74,38 @@ const yearRange = works.length
           )}
         </footer>
 
+        <a href={`/projects/${slug}`} class="work-cover" aria-label={`View ${data.title}`}></a>
+
       </article>
     ))}
+
+    <!-- ── Earlier Work ───────────────────────────────────── -->
+    {secondary.length > 0 && (
+      <>
+        <div class="section-sep">
+          <div class="sep-line"></div>
+          <span class="sep-label">Earlier Work</span>
+          <div class="sep-line"></div>
+        </div>
+
+        <div class="secondary-list">
+          {secondary.map(({ data, slug }) => (
+            <article class="secondary-work">
+              <div class="work-reticle" aria-hidden="true"></div>
+              <div class="secondary-meta">
+                {data.subtitle && <span class="secondary-venue">{data.subtitle}</span>}
+                <time class="work-year" datetime={data.date.toISOString()}>
+                  {data.date.getFullYear()}
+                </time>
+              </div>
+              <h3 class="secondary-title">{data.title}</h3>
+              <p class="secondary-caption">{data.caption}</p>
+              <a href={`/projects/${slug}`} class="work-cover" aria-label={`View ${data.title}`}></a>
+            </article>
+          ))}
+        </div>
+      </>
+    )}
 
   </div>
 </SectionLayout>
@@ -102,14 +125,10 @@ const yearRange = works.length
   }
 
   .masthead-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
     margin-bottom: 1.25rem;
   }
 
-  .masthead-section,
-  .masthead-range {
+  .masthead-section {
     font-family: var(--font-heading);
     font-size: 0.65rem;
     letter-spacing: 0.14em;
@@ -161,16 +180,102 @@ const yearRange = works.length
     background: #1a1a1a;
   }
 
-  /* ── Work entries ─────────────────────────────────────── */
+  /* ── Featured publications ────────────────────────────── */
 
   .work {
+    position: relative;
     padding-block: 3.5rem;
+    padding-inline: 1.25rem;
     border-bottom: 1px solid var(--color-line-dim);
+    cursor: pointer;
   }
 
-  .work:last-child {
+  .work:last-of-type {
     border-bottom: none;
   }
+
+  /* Cover link is last in DOM — sits above non-positioned content naturally */
+  .work-cover {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /* Paper links must be above the cover link */
+  .work-links {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Published badge */
+  .pub-badge {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    background: rgba(218, 79, 46, 0.08);
+    border: 1px solid var(--color-accent);
+    padding: 0.25em 0.6em;
+    border-radius: 2px;
+    margin-bottom: 1.25rem;
+  }
+
+  .work,
+  .secondary-work {
+    transition: box-shadow 180ms ease, background 180ms ease;
+  }
+
+  .work:hover,
+  .secondary-work:hover {
+    background: rgba(218, 79, 46, 0.04);
+    box-shadow: inset 2px 0 0 rgba(218, 79, 46, 0.35);
+  }
+
+  .work-reticle {
+    position: absolute;
+    inset: 10px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 200ms ease;
+    background:
+      linear-gradient(to right,  var(--color-accent) 26px, transparent 26px) top    left  / 26px 2px no-repeat,
+      linear-gradient(to bottom, var(--color-accent) 26px, transparent 26px) top    left  / 2px 26px no-repeat,
+      linear-gradient(to left,   var(--color-accent) 26px, transparent 26px) bottom right / 26px 2px no-repeat,
+      linear-gradient(to top,    var(--color-accent) 26px, transparent 26px) bottom right / 2px 26px no-repeat;
+  }
+
+  .work:hover .work-reticle,
+  .secondary-work:hover .work-reticle { opacity: 1; }
+
+
+  .work-footer {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 2rem;
+  }
+
+  .work-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-left: auto;
+  }
+
+  .work-link {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: opacity 120ms ease;
+  }
+
+  .work-link:hover { opacity: 0.65; }
 
   .work-meta-row {
     display: flex;
@@ -206,9 +311,9 @@ const yearRange = works.length
     line-height: 1.15;
     color: #1a1a1a;
     margin: 0 0 1.25rem;
+    transition: color 150ms ease;
   }
 
-  /* The "so what" — large italic, accessible to non-academics */
   .work-pullquote {
     font-family: var(--font-body);
     font-style: italic;
@@ -220,32 +325,8 @@ const yearRange = works.length
     border-left: 2px solid var(--color-accent);
   }
 
-  .work-divider {
-    height: 1px;
-    background: var(--color-line-dim);
-    margin-block: 1.75rem;
-  }
-
-  .work-body {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    line-height: 1.8;
-    color: #2a2a2a;
-  }
-
-  .work-body :global(p) { margin: 0 0 1em; }
-  .work-body :global(p:last-child) { margin-bottom: 0; }
-
-  /* ── Work footer ──────────────────────────────────────── */
-
-  .work-footer {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
   .work-tags {
+    margin-top: 1.25rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
@@ -262,20 +343,82 @@ const yearRange = works.length
     border-radius: 2px;
   }
 
-  .work-links {
+  /* ── Section separator ────────────────────────────────── */
+
+  .section-sep {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.75rem;
+    margin-block: 3rem 2rem;
   }
 
-  .work-link {
+  .sep-line {
+    flex: 1;
+    border-top: 1px dashed var(--color-line);
+    opacity: 0.25;
+  }
+
+  .sep-label {
     font-family: var(--font-heading);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    color: var(--color-accent);
-    text-decoration: none;
-    transition: opacity 120ms ease;
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-line);
+    opacity: 0.5;
+    white-space: nowrap;
   }
 
-  .work-link:hover { opacity: 0.7; }
+  /* ── Secondary (earlier work) ─────────────────────────── */
+
+  .secondary-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .secondary-work {
+    position: relative;
+    padding-block: 1.5rem;
+    padding-inline: 1.25rem;
+    border-bottom: 1px solid var(--color-line-faint);
+    cursor: pointer;
+  }
+
+
+  .secondary-work:last-child {
+    border-bottom: none;
+  }
+
+  .secondary-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .secondary-venue {
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-line);
+    opacity: 0.6;
+  }
+
+  .secondary-title {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #3a3a3a;
+    margin: 0 0 0.35rem;
+    transition: color 150ms ease;
+  }
+
+  .secondary-caption {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--color-line);
+    margin: 0;
+    line-height: 1.5;
+  }
 </style>

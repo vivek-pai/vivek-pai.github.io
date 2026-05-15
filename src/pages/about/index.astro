@@ -26,23 +26,30 @@ const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
       </div>
     </header>
 
-    <!-- ── Photo ──────────────────────────────────────── -->
-    <div class="photo-wrap">
-      <div class="photo-placeholder" aria-label="Photo placeholder">
-        <span class="photo-label">// PHOTO</span>
-      </div>
-    </div>
+    <!-- ── Photo + Bio ───────────────────────────────── -->
+    <div class="log-layout">
 
-    <!-- ── Log entries ────────────────────────────────── -->
-    <div class="log-body">
-      <p>
-        Placeholder — first paragraph. A few sentences about who you are,
-        written in first person. Keep it personal, not a resume summary.
-      </p>
-      <p>
-        Placeholder — second paragraph. A bit more context: where you're from,
-        what drives you, what you care about beyond the work.
-      </p>
+      <div class="photo-wrap">
+        <div class="photo-frame">
+          <img
+            src="/about/vivek.jpg"
+            alt="Vivek Pai"
+            class="photo"
+          />
+        </div>
+      </div>
+
+      <div class="log-body">
+        <p>
+          Still chasing the LCARS computer. The one that listens,
+          understands, and gets out of the way.
+        </p>
+        <p>
+          Built things. Studied things. Performed, occasionally.
+          Want to do more of the last one.
+        </p>
+      </div>
+
     </div>
 
   </div>
@@ -117,27 +124,55 @@ const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
     color: var(--color-line);
   }
 
+  /* ── Layout ──────────────────────────────────────────── */
+
+  .log-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
   /* ── Photo ───────────────────────────────────────────── */
 
   .photo-wrap {
-    margin-bottom: 2.5rem;
+    position: relative;
   }
 
-  .photo-placeholder {
-    width: 180px;
-    height: 180px;
-    border: 1px dashed var(--color-line-faint);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-bg-alt);
+  .photo-frame {
+    width: 200px;
+    height: 300px;
+    overflow: hidden;
+    border: 1px solid rgba(139, 115, 85, 0.35);
+    position: relative;
   }
 
-  .photo-label {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    color: var(--color-line-faint);
+  /* Schematic corner marks */
+  .photo-frame::before,
+  .photo-frame::after {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .photo-frame::before {
+    background:
+      linear-gradient(to right,  var(--color-accent) 10px, transparent 10px) top    left  / 10px 1px no-repeat,
+      linear-gradient(to bottom, var(--color-accent) 10px, transparent 10px) top    left  / 1px 10px no-repeat,
+      linear-gradient(to left,   var(--color-accent) 10px, transparent 10px) bottom right / 10px 1px no-repeat,
+      linear-gradient(to top,    var(--color-accent) 10px, transparent 10px) bottom right / 1px 10px no-repeat;
+    opacity: 0.6;
+  }
+
+  .photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 22% 0%;
+    display: block;
+    filter: grayscale(1);
   }
 
   /* ── Log body ─────────────────────────────────────────── */
@@ -147,6 +182,7 @@ const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
     font-size: 1rem;
     line-height: 1.8;
     color: #2a2a2a;
+    padding-top: 0.25rem;
   }
 
   .log-body p {
@@ -155,5 +191,18 @@ const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
 
   .log-body p:last-child {
     margin-bottom: 0;
+  }
+
+  /* ── Mobile ──────────────────────────────────────────── */
+
+  @media (max-width: 480px) {
+    .log-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .photo-frame {
+      width: 130px;
+      height: 240px;
+    }
   }
 </style>
