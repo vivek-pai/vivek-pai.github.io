@@ -56,12 +56,16 @@ const section = domainToSection[data.domain] ?? domainToSection.hci;
       <h1 class="project-title">{data.title}</h1>
       <p class="project-lede">{data.caption}</p>
       <div class="project-rule"></div>
+      {data.links && data.links.length > 0 && (
+        <div class="project-links-top">
+          {data.links.map((l: { label: string; url: string }) => (
+            <a href={l.url} class="project-link" target="_blank" rel="noopener noreferrer">
+              ↗ {l.label}
+            </a>
+          ))}
+        </div>
+      )}
     </header>
-
-    <!-- Body -->
-    <div class="project-body">
-      <Content />
-    </div>
 
     <!-- Video (if present) -->
     {data.videoId && (
@@ -76,20 +80,16 @@ const section = domainToSection[data.domain] ?? domainToSection.hci;
       </div>
     )}
 
+    <!-- Body -->
+    <div class="project-body">
+      <Content />
+    </div>
+
     <!-- Footer -->
     <footer class="project-footer">
       {data.tags.length > 0 && (
         <div class="project-tags">
           {data.tags.map((t: string) => <span class="tag">{t}</span>)}
-        </div>
-      )}
-      {data.links && data.links.length > 0 && (
-        <div class="project-links">
-          {data.links.map((l: { label: string; url: string }) => (
-            <a href={l.url} class="project-link" target="_blank" rel="noopener noreferrer">
-              ↗ {l.label}
-            </a>
-          ))}
         </div>
       )}
     </footer>
@@ -219,6 +219,13 @@ const section = domainToSection[data.domain] ?? domainToSection.hci;
     width: 3rem;
     height: 2px;
     background: var(--color-accent);
+    margin-bottom: 1.25rem;
+  }
+
+  .project-links-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
   }
 
   /* Body */

@@ -41,12 +41,12 @@ const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
 
       <div class="log-body">
         <p>
-          Still chasing the LCARS computer. The one that listens,
+          Eyes on the LCARS — the one that listens,
           understands, and gets out of the way.
         </p>
         <p>
-          Built things. Studied things. Performed, occasionally.
-          Want to do more of the last one.
+          Built things. Studied things. Performed.
+          Doing more of that last one.
         </p>
       </div>
 
@@ -57,7 +57,7 @@ const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
 
 <style>
   .log {
-    max-width: 56ch;
+    max-width: min(90vw, 640px);
     margin-inline: auto;
     padding-inline: 1.5rem;
     padding-block: 3rem 6rem;
@@ -128,9 +128,9 @@ const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
 
   .log-layout {
     display: grid;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 250px 1fr;
     gap: 2rem;
-    align-items: start;
+    align-items: center;
   }
 
   /* ── Photo ───────────────────────────────────────────── */
@@ -139,9 +139,24 @@ const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
     position: relative;
   }
 
+  .photo-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0, 0, 0, 0.028) 3px,
+      rgba(0, 0, 0, 0.028) 4px
+    );
+  }
+
   .photo-frame {
-    width: 200px;
-    height: 300px;
+    width: 250px;
+    height: 330px;
     overflow: hidden;
     border: 1px solid rgba(139, 115, 85, 0.35);
     position: relative;
@@ -170,17 +185,17 @@ const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 22% 0%;
+    object-position: 22% 5%;
     display: block;
-    filter: grayscale(1);
+    filter: grayscale(1) blur(0.3px);
   }
 
   /* ── Log body ─────────────────────────────────────────── */
 
   .log-body {
     font-family: var(--font-body);
-    font-size: 1rem;
-    line-height: 1.8;
+    font-size: 1.15rem;
+    line-height: 1.85;
     color: #2a2a2a;
     padding-top: 0.25rem;
   }

@@ -27,7 +27,7 @@ const secondary = allPerformances.filter((p) => !p.data.featured);
         <div class="loc-line"></div>
       </div>
       <h1 class="cover-title">Stage &amp; Keys</h1>
-      <p class="cover-byline">Performances by Vivek Pai</p>
+      <p class="cover-byline">The stage never really left.</p>
       <div class="cover-rule"></div>
     </header>
 
@@ -72,8 +72,9 @@ const secondary = allPerformances.filter((p) => !p.data.featured);
             {p.data.tags.map((t: string) => <span class="tag">{t}</span>)}
           </div>
         )}
-        <!-- Cover link last — sits above passive content; video-wrap is z-index:2 so iframe stays interactive -->
-        <a href={`/projects/${p.id}`} class="entry-cover" aria-label={`View ${p.data.title}`}></a>
+        {p.data.videoId && (
+          <a href={`https://www.youtube.com/watch?v=${p.data.videoId}`} class="entry-cover" target="_blank" rel="noopener noreferrer" aria-label={`Watch ${p.data.title} on YouTube`}></a>
+        )}
       </article>
     ))}
 

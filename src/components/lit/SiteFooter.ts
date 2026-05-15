@@ -16,40 +16,23 @@ export class SiteFooter extends LitElement {
       margin-inline: auto;
       padding-inline: 1.5rem;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
+      justify-content: center;
     }
-    .copy {
-      font-family: var(--font-heading, 'Signika', sans-serif);
-      font-size: 0.7rem;
-      letter-spacing: 0.04em;
-      color: var(--color-text-muted, #6b6060);
-      text-transform: lowercase;
-    }
-    .links {
-      display: flex;
-      gap: 1rem;
-    }
-    a {
-      font-family: var(--font-heading, 'Signika', sans-serif);
-      font-size: 0.7rem;
-      color: var(--color-text-muted, #6b6060);
-      text-decoration: none;
-      letter-spacing: 0.04em;
-      transition: color 120ms ease;
-    }
-    a:hover {
-      color: var(--color-accent, #da4f2e);
+    .sig {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      color: var(--color-line, #8B7355);
+      opacity: 0.45;
+      user-select: none;
     }
   `;
 
   render() {
-    const year = new Date().getFullYear();
     return html`
       <footer>
         <div class="inner">
-          <span class="copy">© vivek pai ${year}</span>
+          <span class="sig">⬡ VP-01 // END OF LOG</span>
         </div>
       </footer>
     `;

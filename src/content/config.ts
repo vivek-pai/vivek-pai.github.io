@@ -19,7 +19,7 @@ const projects = defineCollection({
       .array(
         z.object({
           label: z.string(),
-          url: z.string().url(),
+          url: z.string(),
           type: z
             .enum(['paper', 'github', 'demo', 'video', 'press'])
             .optional(),
