@@ -58,19 +58,30 @@ Early prototypes tested the core interaction concepts with everyday participants
   <ProcessImage src="/projects/parallax/lofi2.jpg" alt="Low-fidelity prototype with audio instructions and wristband display" caption="Wristband form-factor prototype testing audio instructions + small display. Audio proved too interruption-heavy for complex tasks." />
 </ProcessGrid>
 
-### The Final System
+### Medium-Fidelity Prototype
 
-The medium-fidelity prototype combined off-the-shelf hardware into a functional wearable AR guidance system:
+The mid-fi prototype put a functional heads-up display on a participant's head for the first real usability tests. We adapted an ISS rodent habitat maintenance procedure and had participants work through it on a cardboard mockup of the habitat.
 
-- **Teleprompter glass** mounted in a helmet for heads-up procedure display
-- **iPhone** as the AR display source
-- **Windows Phone** for voice command recognition
-- **Bluetooth Beacons** on tools for proximity detection and navigation
-- **Raspberry Pi + iPad mini** running the frontend procedure application (AngularJS)
-- **Intel Edison** as the Python backend server, orchestrating all components
+<ProcessGrid>
+  <ProcessImage src="/projects/parallax/midfiform.png" alt="Medium-fidelity helmet prototype: a bike helmet with a phone holder mounting an iPhone in front of the visor" caption="Helmet form factor — an iPhone mounted at eye level in a custom holder, rendering the UI directly in the user's line of sight." />
+  <ProcessImage src="/projects/parallax/midfiui.png" alt="Medium-fidelity user interface showing a procedure step on a phone screen" caption="I built the mid-fi UI as a web app rendering Google Slides — each slide a procedure step. A separate experimenter dashboard let us jump between steps based on user actions." />
+</ProcessGrid>
 
-The system tracked a user's current procedure step, displayed it in the AR overlay, and guided them toward the next required tool via proximity sensing — all hands-free and voice-controlled.
+### High-Fidelity Prototype
+
+For the final prototype, we replaced the phone with teleprompter glass for true AR projection, added an iPad mini for a larger interface, and wired in speech recognition and Bluetooth beacon-based tool proximity detection.
+
+<ProcessGrid>
+  <ProcessImage src="/projects/parallax/hifiform.png" alt="Final high-fidelity helmet with teleprompter glass projecting the AR interface into the user's field of view" caption="Final helmet. Teleprompter glass projects the procedure UI into the user's view. Voice commands advance steps hands-free." />
+  <ProcessImage src="/projects/parallax/hifiui.png" alt="Final user interface showing procedure step with directional arrows pointing toward required tools" caption="Final UI. The backend tracks procedure progress and communicates with a Beacon reader to surface directional arrows toward the next required tool." />
+</ProcessGrid>
+
+<ProcessImage src="/projects/parallax/gadgets.jpg" alt="IoT hardware components: Intel Edison, two Raspberry Pis, and Bluetooth Beacons laid out on a table" caption="The IoT stack — Intel Edison (Python backend), two Raspberry Pis (frontend + Beacon reader), and Bluetooth Beacons affixed to tools for proximity sensing." />
+
+### Final Deliverable
+
+<ProcessImage src="/projects/parallax/final.jpg" alt="Team member wearing the completed Parallax AR helmet prototype, performing a procedure on the rodent habitat mockup" caption="The completed Parallax system in use. The helmet, speech recognition, and Beacon proximity layer work together to guide a user through an ISS maintenance procedure — hands-free." />
 
 ### Role
 
-Project Manager and lead software developer. Responsible for the system architecture connecting the Edison backend, the AngularJS frontend, the Windows Phone speech recognition module, and the Bluetooth beacon proximity layer.
+Project Manager and lead software developer. Built the mid-fi UI, the hi-fi AngularJS frontend, the Intel Edison Python backend, and the Windows Phone speech recognition module.

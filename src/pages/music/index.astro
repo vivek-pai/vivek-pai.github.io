@@ -38,9 +38,6 @@ const secondary = allPerformances.filter((p) => !p.data.featured);
           <span class="entry-n">{String(i + 1).padStart(2, '0')}</span>
           <div class="entry-title-block">
             <h2 class="entry-title">{p.data.title}</h2>
-            {p.data.subtitle && (
-              <p class="entry-role">as <em>{p.data.subtitle}</em></p>
-            )}
           </div>
         </div>
         <div class="entry-meta">

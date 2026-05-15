@@ -45,6 +45,23 @@ const sections = [
   <vp-footer transition:persist></vp-footer>
 </BaseLayout>
 
+<script>
+  function syncActiveNav() {
+    const path = window.location.pathname;
+    document.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach((link) => {
+      const href = link.getAttribute('href') ?? '';
+      // Match exact or prefix (e.g. /work matches /work and /work/*)
+      const active = href.length > 1
+        ? path === href || path.startsWith(href + '/')
+        : path === href;
+      link.classList.toggle('nav-link--active', active);
+    });
+  }
+
+  syncActiveNav();
+  document.addEventListener('astro:page-load', syncActiveNav);
+</script>
+
 <style>
   .schematic-nav {
     position: sticky;

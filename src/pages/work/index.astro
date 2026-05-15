@@ -8,6 +8,7 @@ const allProjects = await getCollection('projects', ({ data }) =>
 allProjects.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const projects = allProjects.map((p) => ({ data: p.data, slug: p.id }));
+const [hero, ...gridProjects] = projects;
 ---
 
 <SectionLayout
@@ -37,47 +38,69 @@ const projects = allProjects.map((p) => ({ data: p.data, slug: p.id }));
       <div class="cover-rule"></div>
     </header>
 
-    <!-- ── Spreads ───────────────────────────────────────── -->
-    {projects.map(({ data, slug }, i) => (
-      <a href={`/projects/${slug}`} class="spread">
-
-        <!-- Hero -->
+    <!-- ── Hero spread (most recent) ────────────────────── -->
+    {hero && (
+      <a href={`/projects/${hero.slug}`} class="spread">
         <div class="spread-hero-wrap">
           <div class="spread-hero">
-            {data.heroImage ? (
-              <img src={data.heroImage} alt={data.heroImageAlt} loading="lazy" />
+            {hero.data.heroImage ? (
+              <img src={hero.data.heroImage} alt={hero.data.heroImageAlt} loading="lazy" />
             ) : (
               <div class="hero-placeholder">
-                <span class="hero-n">{String(i + 1).padStart(2, '0')}</span>
+                <span class="hero-n">01</span>
               </div>
             )}
             <div class="hero-overline">
-              {data.subtitle && <span class="overline-venue">{data.subtitle}</span>}
-              <time class="overline-year" datetime={data.date.toISOString()}>
-                {data.date.getFullYear()}
+              {hero.data.subtitle && <span class="overline-venue">{hero.data.subtitle}</span>}
+              <time class="overline-year" datetime={hero.data.date.toISOString()}>
+                {hero.data.date.getFullYear()}
               </time>
             </div>
           </div>
           <div class="hero-reticle" aria-hidden="true"></div>
         </div>
-
-        <!-- Display title -->
-        <h2 class="spread-title">{data.title}</h2>
-
-        <!-- Lede — the hook -->
-        <p class="spread-lede">{data.caption}</p>
-
+        <h2 class="spread-title">{hero.data.title}</h2>
+        <p class="spread-lede">{hero.data.caption}</p>
         <div class="spread-rule"></div>
-
-        <!-- Footer -->
-        {data.tags.length > 0 && (
+        {hero.data.tags.length > 0 && (
           <div class="spread-tags">
-            {data.tags.map((t: string) => <span class="tag">{t}</span>)}
+            {hero.data.tags.map((t: string) => <span class="tag">{t}</span>)}
           </div>
         )}
-
       </a>
-    ))}
+    )}
+
+    <!-- ── Grid (remaining projects) ─────────────────────── -->
+    {gridProjects.length > 0 && (
+      <div class="projects-grid">
+        {gridProjects.map(({ data, slug }) => (
+          <a href={`/projects/${slug}`} class="card">
+            <div class="card-hero">
+              {data.heroImage ? (
+                <img src={data.heroImage} alt={data.heroImageAlt} loading="lazy" />
+              ) : (
+                <div class="card-hero-placeholder"></div>
+              )}
+              <div class="hero-overline">
+                {data.subtitle && <span class="overline-venue">{data.subtitle}</span>}
+                <time class="overline-year" datetime={data.date.toISOString()}>
+                  {data.date.getFullYear()}
+                </time>
+              </div>
+              <div class="hero-reticle" aria-hidden="true"></div>
+            </div>
+            <h3 class="card-title">{data.title}</h3>
+            <p class="card-lede">{data.caption}</p>
+            <div class="spread-rule"></div>
+            {data.tags.length > 0 && (
+              <div class="spread-tags">
+                {data.tags.map((t: string) => <span class="tag">{t}</span>)}
+              </div>
+            )}
+          </a>
+        ))}
+      </div>
+    )}
 
   </div>
 </SectionLayout>
@@ -330,5 +353,77 @@ const projects = allProjects.map((p) => ({ data: p.data, slug: p.id }));
     padding: 0.2em 0.55em;
     border: 1px solid var(--color-line-faint);
     border-radius: 2px;
+  }
+
+  /* ── Projects grid ──────────────────────────────────── */
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem 2.5rem;
+    padding-top: 4rem;
+    border-top: 1px solid var(--color-line-dim);
+  }
+
+  .card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 120ms ease;
+  }
+
+  .card:hover .spread-rule { width: 5rem; }
+  .card:hover .hero-reticle { opacity: 1; }
+  .card:hover .card-hero img { filter: brightness(0.82); }
+  .card:hover .card-title { color: var(--color-accent); }
+
+  .card-hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--color-bg-alt);
+    margin-bottom: 1.25rem;
+  }
+
+  .card-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: filter 220ms ease;
+  }
+
+  .card-hero-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg-alt);
+  }
+
+  .card-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: #1a1a1a;
+    margin: 0 0 0.75rem;
+    transition: color 180ms ease;
+  }
+
+  .card-lede {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: #3a3a3a;
+    margin: 0 0 1.25rem;
+  }
+
+  @media (max-width: 600px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
   }
 </style>

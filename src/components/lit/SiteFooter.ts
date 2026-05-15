@@ -50,10 +50,6 @@ export class SiteFooter extends LitElement {
       <footer>
         <div class="inner">
           <span class="copy">© vivek pai ${year}</span>
-          <div class="links">
-            <a href="https://github.com/vivek-pai" target="_blank" rel="noopener noreferrer">github</a>
-            <a href="https://www.linkedin.com/in/vivekrpai" target="_blank" rel="noopener noreferrer">linkedin</a>
-          </div>
         </div>
       </footer>
     `;

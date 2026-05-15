@@ -1,5 +1,5 @@
 ---
-title: Real-time Detection of Rapport
+title: Understanding Intentions and Social Goals behind User Behavior
 subtitle: "CMU ArticuLab · Advisor: Alexandros Papangelis"
 caption: Understanding the social signals that indicate friendship — and training a machine to read them from video.
 heroImage: /projects/rapport/ada-and-grace.jpg
@@ -11,6 +11,12 @@ featured: false
 ---
 
 import ProcessImage from '@components/mdx/ProcessImage.astro';
+
+### Abstract
+
+Rapport between two strangers is established over time through the use of conversational strategies. For example, a person might reveal something personal about herself, which would then transition the conversation from the polite to the intimate.
+
+This project aimed to determine if participants in a peer tutoring setting were friends from video, voice transcripts, and manual video annotations. For the final deliverable, I built a classifier that could determine friendship with high accuracy using 28 different features extracted from these sources.
 
 ### Context
 
@@ -35,6 +41,8 @@ I developed a toolkit to extract features from three sources:
 - **Manual annotations**: frame-level behavioral tags from the ArticuLab annotation protocol
 
 The FaceTracker gave me continuous emotional state estimates and head kinematics across each tutoring session — the same engine I had built and validated in my thesis work.
+
+<ProcessImage src="/projects/senior-thesis/surprise_facemesh.jpg" alt="Face mesh overlay on a participant expressing surprise — points tracked across forehead, eyes, nose, and mouth" caption="The Modified FaceTracker outputting a facial mesh. Used here to extract smile frequency, head position, and head movement across each tutoring session." />
 
 ### Classifier
 

@@ -99,7 +99,7 @@ const section = domainToSection[data.domain] ?? domainToSection.hci;
 
 <style>
   .project {
-    max-width: min(95vw, 900px);
+    max-width: min(90vw, 680px);
     margin-inline: auto;
     padding-inline: 2rem;
     padding-block: 2rem 6rem;
@@ -213,7 +213,6 @@ const section = domainToSection[data.domain] ?? domainToSection.hci;
     line-height: 1.6;
     color: #3a3a3a;
     margin: 0 0 1.75rem;
-    max-width: 62ch;
   }
 
   .project-rule {
@@ -230,13 +229,7 @@ const section = domainToSection[data.domain] ?? domainToSection.hci;
     color: #2a2a2a;
   }
 
-  .project-body :global(p),
-  .project-body :global(ul),
-  .project-body :global(h3) {
-    max-width: 62ch;
-  }
-
-  .project-body :global(p) { margin: 0 0 1em; }
+.project-body :global(p) { margin: 0 0 1em; }
   .project-body :global(p:last-child) { margin-bottom: 0; }
 
   .project-body :global(h3) {
@@ -256,10 +249,53 @@ const section = domainToSection[data.domain] ?? domainToSection.hci;
 
   .project-body :global(li) { margin-bottom: 0.35em; }
 
+  .project-body :global(table) {
+    width: 100%;
+    max-width: 62ch;
+    border-collapse: collapse;
+    margin: 0 0 1.5em;
+    font-size: 0.9rem;
+  }
+
+  .project-body :global(th) {
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    text-align: left;
+    padding: 0.5em 1em 0.5em 0;
+    border-bottom: 2px solid var(--color-accent);
+  }
+
+  .project-body :global(td) {
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: #2a2a2a;
+    padding: 0.65em 1em 0.65em 0;
+    border-bottom: 1px solid var(--color-line-faint);
+    vertical-align: top;
+  }
+
+  .project-body :global(tr:last-child td) {
+    border-bottom: none;
+  }
+
   .project-body :global(strong) {
     font-weight: 700;
     color: #1a1a1a;
   }
+
+  .project-body :global(blockquote) {
+    border-left: 3px solid var(--color-accent);
+    margin: 1.5em 0;
+    padding: 0.4em 0 0.4em 1.25em;
+    font-style: italic;
+    color: #4a3a2a;
+  }
+
+  .project-body :global(blockquote p) { margin: 0; }
 
   /* Video embed */
   .project-video {

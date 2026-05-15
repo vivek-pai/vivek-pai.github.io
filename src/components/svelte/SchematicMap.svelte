@@ -92,6 +92,14 @@
 <div class="schematic-wrapper" class:mounted>
   <!-- Fallback nav for screen readers / mobile -->
   <nav class="schematic-fallback" aria-label="Site sections">
+    <header class="fallback-header">
+      <div class="fallback-id">
+        <span class="fallback-name">VIVEK PAI</span>
+        <span class="fallback-vessel">// VP-01</span>
+      </div>
+      <p class="fallback-tagline">Builder. Researcher. Occasional performer.</p>
+      <div class="fallback-rule"></div>
+    </header>
     <ul>
       {#each hotspots.filter((h) => h.active) as h (h.id)}
         <li><a href={h.href}>{h.label} <span class="fallback-sub">— {h.sublabel}</span></a></li>
@@ -481,7 +489,49 @@
   }
 
   .schematic-fallback {
-    padding: 2rem 1.5rem;
+    padding: 3rem 1.5rem 2rem;
+  }
+
+  .fallback-header {
+    margin-bottom: 2rem;
+  }
+
+  .fallback-id {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .fallback-name {
+    font-family: var(--font-heading, 'Signika', sans-serif);
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--color-text, #1a1a1a);
+  }
+
+  .fallback-vessel {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--color-line, #8B7355);
+    opacity: 0.6;
+  }
+
+  .fallback-tagline {
+    font-family: var(--font-body, 'PT Serif', serif);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--color-text-muted, #6b6060);
+    margin: 0 0 1.25rem;
+    line-height: 1.5;
+  }
+
+  .fallback-rule {
+    width: 2.5rem;
+    height: 2px;
+    background: var(--color-accent, #da4f2e);
   }
 
   .schematic-fallback ul {
