@@ -36,6 +36,7 @@ const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
             alt="Vivek Pai"
             class="photo"
           />
+          <div class="photo-scanlines" aria-hidden="true"></div>
         </div>
       </div>
 
@@ -139,8 +140,7 @@ const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
     position: relative;
   }
 
-  .photo-wrap::after {
-    content: '';
+  .photo-scanlines {
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -210,14 +210,20 @@ const logDate = today.toISOString().split('T')[0].replace(/-/g, '.');
 
   /* ── Mobile ──────────────────────────────────────────── */
 
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
     .log-layout {
       grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .photo-wrap {
+      display: flex;
+      justify-content: center;
     }
 
     .photo-frame {
-      width: 130px;
-      height: 240px;
+      width: 180px;
+      height: 260px;
     }
   }
 </style>
